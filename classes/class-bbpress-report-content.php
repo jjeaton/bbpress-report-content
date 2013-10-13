@@ -475,7 +475,7 @@ class bbp_ReportContent {
 	}
 
 	/**
-	 * Add the reported status to the list of post statuses.
+	 * Add the reported status to the list of post statuses so it shows up in view=all
 	 *
 	 * Used in the has_topics and has_replies queries
 	 *
@@ -484,7 +484,8 @@ class bbp_ReportContent {
 	 */
 	public function insert_report_status( $r ) {
 
-		if ( is_admin() )
+		// Ignore admin queries and only proceed if we're in a view=all query
+		if ( is_admin() || !bbp_get_view_all() )
 			return $r;
 
 		if ( ! isset( $r['post_status'] ) )
