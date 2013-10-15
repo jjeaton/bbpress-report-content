@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: bbpress, topics, replies, report, content, spam  
 Requires at least: 3.6  
 Tested up to: 3.6.1  
-Stable tag: 1.0.0  
+Stable tag: 1.0.1  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -36,11 +36,19 @@ The user who reported the topic or reply is stored as post meta and displayed as
 
 ## Changelog ##
 
+### 1.0.1 - 2013-10-13 ###
+
+* Fix - Issue where bbPress feeds were only showing "reported" topics/replies.
+
 ### 1.0.0 ###
 
 * Initial release
 
 ## Upgrade Notice ##
+
+### 1.0.1 ###
+
+* Upgrade to fix a bug in 1.0.0 that broke bbPress RSS feeds.
 
 ### 1.0.0 ###
 
