@@ -176,8 +176,8 @@ class bbp_ReportContent {
 		register_post_status(
 			$this->get_reported_status_id(),
 			apply_filters( 'bbp_rc_register_reported_post_status', array(
-				'label'                     => _x( 'User Reported', 'post', $this->plugin_slug ),
-				'label_count'               => _nx_noop( 'User Reported <span class="count">(%s)</span>', 'User Reported <span class="count">(%s)</span>', 'post', $this->plugin_slug ),
+				'label'                     => _x( 'User Reported', 'post', 'bbpress-report-content' ),
+				'label_count'               => _nx_noop( 'User Reported <span class="count">(%s)</span>', 'User Reported <span class="count">(%s)</span>', 'post', 'bbpress-report-content' ),
 				'public'                    => true,
 				'exclude_from_search'       => true,
 				'show_in_admin_status_list' => true,
@@ -196,7 +196,7 @@ class bbp_ReportContent {
 	 */
 	public function add_topic_status( $statuses ) {
 		// Add our custom status to the list
-		$statuses[$this->get_reported_status_id()] = _x( 'Reported', 'Mark topic as reported', $this->plugin_slug );
+		$statuses[$this->get_reported_status_id()] = _x( 'Reported', 'Mark topic as reported', 'bbpress-report-content' );
 
 		return $statuses;
 	}
@@ -247,8 +247,8 @@ class bbp_ReportContent {
 			'link_before'  => '',
 			'link_after'   => '',
 			'sep'          => ' | ',
-			'report_text'    => esc_html__( 'Report',   $this->plugin_slug ),
-			'unreport_text'  => esc_html__( 'Unreport', $this->plugin_slug )
+			'report_text'    => esc_html__( 'Report',   'bbpress-report-content' ),
+			'unreport_text'  => esc_html__( 'Unreport', 'bbpress-report-content' )
 		), 'get_topic_report_link' );
 
 		$topic = bbp_get_topic( bbp_get_topic_id( (int) $r['id'] ) );
@@ -265,7 +265,7 @@ class bbp_ReportContent {
 		$display = $reported ? $r['unreport_text'] : $r['report_text'];
 		$uri     = add_query_arg( array( 'action' => 'bbp_rc_toggle_topic_report', 'topic_id' => $topic->ID ) );
 		$uri     = wp_nonce_url( $uri, 'report-topic_' . $topic->ID );
-		$retval  = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="bbp-topic-report-link" title="' . __( 'Report inappropriate content', $this->plugin_slug ) . '">' . $display . '</a>' . $r['link_after'];
+		$retval  = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="bbp-topic-report-link" title="' . __( 'Report inappropriate content', 'bbpress-report-content' ) . '">' . $display . '</a>' . $r['link_after'];
 
 		return apply_filters( 'bbp_rc_get_topic_report_link', $retval, $r );
 	}
@@ -333,7 +333,7 @@ class bbp_ReportContent {
 
 				$is_reported  = $this->is_topic_reported( $topic_id );
 				$success  = true === $is_reported ? $this->unreport_topic( $topic_id ) : $this->report_topic( $topic_id );
-				$failure  = true === $is_reported ? __( '<strong>ERROR</strong>: There was a problem unmarking the topic as reported.', $this->plugin_slug ) : __( '<strong>ERROR</strong>: There was a problem reporting the topic.', $this->plugin_slug );
+				$failure  = true === $is_reported ? __( '<strong>ERROR</strong>: There was a problem unmarking the topic as reported.', 'bbpress-report-content' ) : __( '<strong>ERROR</strong>: There was a problem reporting the topic.', 'bbpress-report-content' );
 				// $view_all = !$is_reported; // Only need this if we want to hide it, like spam
 
 				break;
@@ -550,8 +550,8 @@ class bbp_ReportContent {
 			'id'           => 0,
 			'link_before'  => '',
 			'link_after'   => '',
-			'report_text'    => esc_html__( 'Report',   $this->plugin_slug ),
-			'unreport_text'  => esc_html__( 'Unreport', $this->plugin_slug )
+			'report_text'    => esc_html__( 'Report',   'bbpress-report-content' ),
+			'unreport_text'  => esc_html__( 'Unreport', 'bbpress-report-content' )
 		), 'get_reply_report_link' );
 
 		$reply = bbp_get_reply( bbp_get_reply_id( (int) $r['id'] ) );
@@ -568,7 +568,7 @@ class bbp_ReportContent {
 		$display  = $reported ? $r['unreport_text'] : $r['report_text'];
 		$uri      = add_query_arg( array( 'action' => 'bbp_rc_toggle_reply_report', 'reply_id' => $reply->ID ) );
 		$uri      = wp_nonce_url( $uri, 'report-reply_' . $reply->ID );
-		$retval   = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="bbp-reply-report-link" title="' . __( 'Report inappropriate content', $this->plugin_slug ) . '">' . $display . '</a>' . $r['link_after'];
+		$retval   = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="bbp-reply-report-link" title="' . __( 'Report inappropriate content', 'bbpress-report-content' ) . '">' . $display . '</a>' . $r['link_after'];
 
 
 
@@ -638,7 +638,7 @@ class bbp_ReportContent {
 
 				$is_reported  = $this->is_reply_reported( $reply_id );
 				$success  = true === $is_reported ? $this->unreport_reply( $reply_id ) : $this->report_reply( $reply_id );
-				$failure  = true === $is_reported ? __( '<strong>ERROR</strong>: There was a problem unmarking the reply as reported.', $this->plugin_slug ) : __( '<strong>ERROR</strong>: There was a problem reporting the reply.', $this->plugin_slug );
+				$failure  = true === $is_reported ? __( '<strong>ERROR</strong>: There was a problem unmarking the reply as reported.', 'bbpress-report-content' ) : __( '<strong>ERROR</strong>: There was a problem reporting the reply.', 'bbpress-report-content' );
 				// $view_all = !$is_reported; // Only need this if we want to hide it, like spam
 
 				break;
@@ -792,7 +792,7 @@ class bbp_ReportContent {
 
 		echo '<div class="bbp-template-notice error bbp-rc-topic-is-reported">';
 			echo '<p>';
-				echo apply_filters( 'bbp_rc_topic_notice', __( 'This topic has been reported for inappropriate content', $this->plugin_slug ) );
+				echo apply_filters( 'bbp_rc_topic_notice', __( 'This topic has been reported for inappropriate content', 'bbpress-report-content' ) );
 			echo '</p>';
 		echo '</div>';
 	}
@@ -817,7 +817,7 @@ class bbp_ReportContent {
 
 		echo '<div class="error bbp-rc-reply-is-reported">';
 			echo '<p>';
-				echo apply_filters( 'bbp_rc_reply_notice', __( '<em>This reply has been reported for inappropriate content.</em>', $this->plugin_slug ) );
+				echo apply_filters( 'bbp_rc_reply_notice', __( '<em>This reply has been reported for inappropriate content.</em>', 'bbpress-report-content' ) );
 			echo '</p>';
 		echo '</div>';
 	}
@@ -845,7 +845,7 @@ class bbp_ReportContent {
 			// Report
 			$report_uri  = wp_nonce_url( add_query_arg( array( 'topic_id' => $topic->ID, 'action' => 'bbp_rc_toggle_topic_report' ), remove_query_arg( array( 'bbp_topic_toggle_notice', 'topic_id', 'failed', 'super' ) ) ), 'report-topic_'  . $topic->ID );
 			if ( $this->is_topic_reported( $topic->ID ) )
-				$actions['report'] = '<a href="' . esc_url( $report_uri ) . '" title="' . esc_attr__( 'Mark the topic as unreported', $this->plugin_slug ) . '">' . esc_html__( 'Unreport', $this->plugin_slug ) . '</a>';
+				$actions['report'] = '<a href="' . esc_url( $report_uri ) . '" title="' . esc_attr__( 'Mark the topic as unreported', 'bbpress-report-content' ) . '">' . esc_html__( 'Unreport', 'bbpress-report-content' ) . '</a>';
 		}
 
 		return $actions;
@@ -874,10 +874,10 @@ class bbp_ReportContent {
 
 			// Bail if topic is missing
 			if ( empty( $topic ) )
-				wp_die( __( 'The topic was not found!', $this->plugin_slug ) );
+				wp_die( __( 'The topic was not found!', 'bbpress-report-content' ) );
 
 			if ( !current_user_can( 'moderate', $topic->ID ) ) // What is the user doing here?
-				wp_die( __( 'You do not have the permission to do that!', $this->plugin_slug ) );
+				wp_die( __( 'You do not have the permission to do that!', 'bbpress-report-content' ) );
 
 			switch ( $action ) {
 				case 'bbp_rc_toggle_topic_report' :
@@ -936,7 +936,7 @@ class bbp_ReportContent {
 
 			switch ( $notice ) {
 				case 'unreported'    :
-					$message = $is_failure === true ? sprintf( __( 'There was a problem unreporting the topic "%1$s".', $this->plugin_slug ), $topic_title ) : sprintf( __( 'Topic "%1$s" successfully unreported.', $this->plugin_slug ), $topic_title );
+					$message = $is_failure === true ? sprintf( __( 'There was a problem unreporting the topic "%1$s".', 'bbpress-report-content' ), $topic_title ) : sprintf( __( 'Topic "%1$s" successfully unreported.', 'bbpress-report-content' ), $topic_title );
 					break;
 			}
 
@@ -973,7 +973,7 @@ class bbp_ReportContent {
 			// Report
 			$report_uri  = wp_nonce_url( add_query_arg( array( 'reply_id' => $reply->ID, 'action' => 'bbp_rc_toggle_reply_report' ), remove_query_arg( array( 'bbp_reply_toggle_notice', 'reply_id', 'failed', 'super' ) ) ), 'report-reply_'  . $reply->ID );
 			if ( $this->is_reply_reported( $reply->ID ) )
-				$actions['report'] = '<a href="' . esc_url( $report_uri ) . '" title="' . esc_attr__( 'Mark the reply as unreported', $this->plugin_slug ) . '">' . esc_html__( 'Unreport', $this->plugin_slug ) . '</a>';
+				$actions['report'] = '<a href="' . esc_url( $report_uri ) . '" title="' . esc_attr__( 'Mark the reply as unreported', 'bbpress-report-content' ) . '">' . esc_html__( 'Unreport', 'bbpress-report-content' ) . '</a>';
 		}
 
 		return $actions;
@@ -1002,10 +1002,10 @@ class bbp_ReportContent {
 
 			// Bail if reply is missing
 			if ( empty( $reply ) )
-				wp_die( __( 'The reply was not found!', $this->plugin_slug ) );
+				wp_die( __( 'The reply was not found!', 'bbpress-report-content' ) );
 
 			if ( !current_user_can( 'moderate', $reply->ID ) ) // What is the user doing here?
-				wp_die( __( 'You do not have the permission to do that!', $this->plugin_slug ) );
+				wp_die( __( 'You do not have the permission to do that!', 'bbpress-report-content' ) );
 
 			switch ( $action ) {
 				case 'bbp_rc_toggle_reply_report' :
@@ -1064,7 +1064,7 @@ class bbp_ReportContent {
 
 			switch ( $notice ) {
 				case 'unreported'    :
-					$message = $is_failure === true ? sprintf( __( 'There was a problem unreporting the reply "%1$s".', $this->plugin_slug ), $reply_title ) : sprintf( __( 'Reply "%1$s" successfully unreported.', $this->plugin_slug ), $reply_title );
+					$message = $is_failure === true ? sprintf( __( 'There was a problem unreporting the reply "%1$s".', 'bbpress-report-content' ), $reply_title ) : sprintf( __( 'Reply "%1$s" successfully unreported.', 'bbpress-report-content' ), $reply_title );
 					break;
 			}
 
@@ -1090,7 +1090,7 @@ class bbp_ReportContent {
 			return $columns;
 
 		// Add "reported by" column
-		$columns['bbp_rc_user'] = __( 'Reported By', $this->plugin_slug );
+		$columns['bbp_rc_user'] = __( 'Reported By', 'bbpress-report-content' );
 
 		return $columns;
 	}
@@ -1129,7 +1129,7 @@ class bbp_ReportContent {
 			return $columns;
 
 		// Add "reported by" column
-		$columns['bbp_rc_user'] = __( 'Reported By', $this->plugin_slug );
+		$columns['bbp_rc_user'] = __( 'Reported By', 'bbpress-report-content' );
 
 		return $columns;
 	}
@@ -1168,7 +1168,7 @@ class bbp_ReportContent {
 			$user = get_userdata( $user_id );
 			$username = $user->user_login;
 		} else {
-			$username = __('Guest', $this->plugin_slug);
+			$username = __('Guest', 'bbpress-report-content');
 		}
 
 		return $username;
