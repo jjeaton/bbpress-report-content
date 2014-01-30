@@ -1,14 +1,15 @@
-# Copyright (C) 2013 bbPress - Report Content
+# Copyright (C) 2014 bbPress - Report Content
 # This file is distributed under the same license as the bbPress - Report Content package.
 msgid ""
 msgstr ""
 "Project-Id-Version: bbPress - Report Content 1.0.1\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/bbpress-report-content\n"
-"POT-Creation-Date: 2013-12-23 20:08:58+00:00\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/bbpress-report-"
+"content\n"
+"POT-Creation-Date: 2014-01-30 20:21:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2013-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
@@ -47,7 +48,8 @@ msgid "Report inappropriate content"
 msgstr ""
 
 #: classes/class-bbpress-report-content.php:336
-msgid "<strong>ERROR</strong>: There was a problem unmarking the topic as reported."
+msgid ""
+"<strong>ERROR</strong>: There was a problem unmarking the topic as reported."
 msgstr ""
 
 #: classes/class-bbpress-report-content.php:336
@@ -55,7 +57,8 @@ msgid "<strong>ERROR</strong>: There was a problem reporting the topic."
 msgstr ""
 
 #: classes/class-bbpress-report-content.php:641
-msgid "<strong>ERROR</strong>: There was a problem unmarking the reply as reported."
+msgid ""
+"<strong>ERROR</strong>: There was a problem unmarking the reply as reported."
 msgstr ""
 
 #: classes/class-bbpress-report-content.php:641
@@ -115,12 +118,13 @@ msgstr ""
 #: classes/class-bbpress-report-content.php:1171
 msgid "Guest"
 msgstr ""
+
 #. Plugin Name of the plugin/theme
 msgid "bbPress - Report Content"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://www.josheaton.org/"
+msgid "http://www.josheaton.org/wordpress-plugins/bbpress-report-content/"
 msgstr ""
 
 #. Description of the plugin/theme
