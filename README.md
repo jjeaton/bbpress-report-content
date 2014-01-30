@@ -4,18 +4,37 @@ Contributors: jjeaton
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7DR8UF55NRFTS  
 Tags: bbpress, topics, replies, report, content, spam  
 Requires at least: 3.6  
-Tested up to: 3.6.1  
-Stable tag: 1.0.1  
+Tested up to: 3.8.1  
+Stable tag: 1.0.2  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
-Give your bbPress forum users the ability to report inappropriate content or spam.
+Give your bbPress forum users the ability to report inappropriate content or spam in topics or replies.
 
 ## Description ##
 
-Give your bbPress forum users the ability to report inappropriate content or spam. This plugin adds a "report" admin link to topics and replies, when clicked, the topic/reply is assigned a post status of "User Reported". All logged-in users can report content and see that a topic has been reported, only Moderators and up can un-report the content. Integrates with the standard Topic admin screens.
+Give your bbPress forum users the ability to report inappropriate content or spam in topics or replies. This plugin adds a "report" admin link to topics and replies, when clicked, the topic/reply is assigned a post status of "User Reported".
 
-Requires bbPress 2.4.
+All logged-in users can report content and see that a topic has been reported, only Moderators and up can un-report the content. Integrates with the standard Topic admin screens.
+
+When a topic is reported, a banner is shown at the top of the page indicating that the topic has been reported as inappropriate. For replies, a message is added within the reply, before the content.
+
+Requires bbPress 2.4+.
+
+### Translators ###
+
+bbPress - Report Content is fully internationalized and ready for translation:
+
+The following translations are currently available:
+
+* Spanish (es_ES) - [Andrew Kurtis - WebHostingHub](http://www.webhostinghub.com/)
+* French (fr_FR) - [Matthieu Durocher](http://technocyclope.com/)
+
+New language packs, or updates to existing ones, can be sent via GitHub or by [contacting me](http://www.josheaton.org/contact/).
+
+### Developers ###
+
+Active development happens on Github: [https://github.com/jjeaton/bbpress-report-content](https://github.com/jjeaton/bbpress-report-content). PRs welcome!
 
 ## Installation ##
 
@@ -36,6 +55,14 @@ The user who reported the topic or reply is stored as post meta and displayed as
 
 ## Changelog ##
 
+### 1.0.2 - 2014-01-30 ###
+
+* Fix - Plugin was loading the wrong directory for language files.
+* Fix - Modify all textdomain strings and update POT file
+* Fix - Make `get_reply_report_link` public so it can be used to output the report link elsewhere.
+* Enhancement - Spanish Translation (props Andrew Kurtis)
+* Enhancement - French Translation (props Matthieu Durocher)
+
 ### 1.0.1 - 2013-10-13 ###
 
 * Fix - Issue where bbPress feeds were only showing "reported" topics/replies.
@@ -45,6 +72,14 @@ The user who reported the topic or reply is stored as post meta and displayed as
 * Initial release
 
 ## Upgrade Notice ##
+
+### 1.0.2 ###
+
+* Fix - Plugin was loading the wrong directory for language files.
+* Fix - Modify all textdomain strings and update POT file
+* Fix - Make `get_reply_report_link` public so it can be used to output the report link elsewhere.
+* Enhancement - Spanish Translation (props Andrew Kurtis)
+* Enhancement - French Translation (props Matthieu Durocher)
 
 ### 1.0.1 ###
 
