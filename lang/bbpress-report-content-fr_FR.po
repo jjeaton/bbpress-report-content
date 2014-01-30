@@ -1,0 +1,154 @@
+# Copyright (C) 2013 bbPress Report Content
+# This file is distributed under the same license as the bbPress Report Content package.
+msgid ""
+msgstr ""
+"Project-Id-Version: bbPress - Report Content 1.0.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/bbpress-report-content\n"
+"POT-Creation-Date: 2014-01-17 11:25-0500\n"
+"PO-Revision-Date: 2014-01-21 14:05-0500\n"
+"Last-Translator: Matthieu Durocher <matthieu@technocyclope.com>\n"
+"Language-Team: Matthieu Durocher <matthieu.durocher@gmail.com>\n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.3\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: ..\n"
+
+#: classes/class-bbpress-report-content.php:179
+msgctxt "post"
+msgid "User Reported"
+msgstr "Signalé"
+
+#: classes/class-bbpress-report-content.php:180
+#, php-format
+msgctxt "post"
+msgid "User Reported <span class=\"count\">(%s)</span>"
+msgid_plural "User Reported <span class=\"count\">(%s)</span>"
+msgstr[0] "Signalé <span class=\"count\">(%s)</span>"
+msgstr[1] "Signalés <span class=\"count\">(%s)</span>"
+
+#: classes/class-bbpress-report-content.php:199
+msgctxt "Mark topic as reported"
+msgid "Reported"
+msgstr "Signalé"
+
+#: classes/class-bbpress-report-content.php:250
+#: classes/class-bbpress-report-content.php:553
+msgid "Report"
+msgstr "Signaler"
+
+#: classes/class-bbpress-report-content.php:251
+#: classes/class-bbpress-report-content.php:554
+#: classes/class-bbpress-report-content.php:848
+#: classes/class-bbpress-report-content.php:976
+msgid "Unreport"
+msgstr "Enlever l'avertissement"
+
+#: classes/class-bbpress-report-content.php:268
+#: classes/class-bbpress-report-content.php:571
+msgid "Report inappropriate content"
+msgstr "Signaler du contenu inapproprié"
+
+#: classes/class-bbpress-report-content.php:336
+msgid ""
+"<strong>ERROR</strong>: There was a problem unmarking the topic as reported."
+msgstr ""
+"<strong>ERREUR</strong> : Un problème empèche d'enlever l'avertissement du "
+"sujet."
+
+#: classes/class-bbpress-report-content.php:336
+msgid "<strong>ERROR</strong>: There was a problem reporting the topic."
+msgstr "<strong>ERREUR</strong> : Un problème empèche de signaler le sujet."
+
+#: classes/class-bbpress-report-content.php:641
+msgid ""
+"<strong>ERROR</strong>: There was a problem unmarking the reply as reported."
+msgstr ""
+"<strong>ERREUR</strong> : Un problème empèche d'enlever l'avertissement de "
+"la réponse."
+
+#: classes/class-bbpress-report-content.php:641
+msgid "<strong>ERROR</strong>: There was a problem reporting the reply."
+msgstr "<strong>ERREUR</strong> : Un problème empèche de signaler la réponse."
+
+#: classes/class-bbpress-report-content.php:795
+msgid "This topic has been reported for inappropriate content"
+msgstr "Ce sujet a été signalé comme ayant un contenu inapproprié"
+
+#: classes/class-bbpress-report-content.php:820
+msgid "<em>This reply has been reported for inappropriate content.</em>"
+msgstr ""
+"<em>Cette réponse a été signalée comme ayant un contenu inapproprié.</em>"
+
+#: classes/class-bbpress-report-content.php:848
+msgid "Mark the topic as unreported"
+msgstr "Enlever l'avertissement du sujet"
+
+#: classes/class-bbpress-report-content.php:877
+msgid "The topic was not found!"
+msgstr "Le sujet est introuvable !"
+
+#: classes/class-bbpress-report-content.php:880
+#: classes/class-bbpress-report-content.php:1008
+msgid "You do not have the permission to do that!"
+msgstr "Vous n'avez pas la permission de faire cela !"
+
+#: classes/class-bbpress-report-content.php:939
+#, php-format
+msgid "There was a problem unreporting the topic \"%1$s\"."
+msgstr ""
+"Il y a eu un problème lors du retrait de l'avertissement du sujet «%1$s»."
+
+#: classes/class-bbpress-report-content.php:939
+#, php-format
+msgid "Topic \"%1$s\" successfully unreported."
+msgstr "L'avertissement a été enlevé du sujet «%1$s»."
+
+#: classes/class-bbpress-report-content.php:976
+msgid "Mark the reply as unreported"
+msgstr "Enlever l'avertissement de la réponse"
+
+#: classes/class-bbpress-report-content.php:1005
+msgid "The reply was not found!"
+msgstr "la réponse est introuvable !"
+
+#: classes/class-bbpress-report-content.php:1067
+#, php-format
+msgid "There was a problem unreporting the reply \"%1$s\"."
+msgstr ""
+"Il y a eu un problème lors du retrait de l'avertissement de la réponse "
+"«%1$s»."
+
+#: classes/class-bbpress-report-content.php:1067
+#, php-format
+msgid "Reply \"%1$s\" successfully unreported."
+msgstr "L'avertissement a été enlevé de la réponse «%1$s»."
+
+#: classes/class-bbpress-report-content.php:1093
+#: classes/class-bbpress-report-content.php:1132
+msgid "Reported By"
+msgstr "Signalé par"
+
+#: classes/class-bbpress-report-content.php:1171
+msgid "Guest"
+msgstr "Personne invitée"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "http://www.josheaton.org/"
+msgstr "http://www.josheaton.org/"
+
+#. Description of the plugin/theme
+msgid "Allows users to report inappropriate content in topics and replies."
+msgstr "Permet aux membres du forum de signaler du contenu inapproprié."
+
+#. Author of the plugin/theme
+msgid "Josh Eaton"
+msgstr "Josh Eaton"
