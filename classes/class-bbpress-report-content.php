@@ -543,7 +543,7 @@ class bbp_ReportContent {
 	 * @param  array $args [description]
 	 * @return string
 	 */
-	private function get_reply_report_link( $args = '' ) {
+	public function get_reply_report_link( $args = '' ) {
 
 		// Parse arguments against default values
 		$r = bbp_parse_args( $args, array(
