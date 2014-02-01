@@ -1,0 +1,156 @@
+# Copyright (C) 2013 bbPress Report Content
+# This file is distributed under the same license as the bbPress Report Content package.
+msgid ""
+msgstr ""
+"Project-Id-Version: bbPress - Report Content 1.0.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/bbpress-report-"
+"content\n"
+"POT-Creation-Date: 2014-01-30 21:03:47+00:00\n"
+"PO-Revision-Date: 2014-01-31 12:03+0100\n"
+"Last-Translator: Josh Eaton <josh@josheaton.org>\n"
+"Language-Team: \n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.3\n"
+"X-Poedit-KeywordsList: __;_e;_n;_x;_ex;_nx;esc_attr__;esc_html__\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: ..\n"
+
+#: classes/class-bbpress-report-content.php:179
+#, fuzzy
+msgctxt "post"
+msgid "User Reported"
+msgstr "Użytkownik zgłoszony"
+
+#: classes/class-bbpress-report-content.php:180
+msgctxt "post"
+msgid "User Reported <span class=\"count\">(%s)</span>"
+msgid_plural "User Reported <span class=\"count\">(%s)</span>"
+msgstr[0] "Użytkownik Zgłoszony <span class=\"count\">(%s)</span>"
+msgstr[1] "Użytkownik Zgłoszony <span class=\"count\">(%s)</span>"
+msgstr[2] "Użytkownik Zgłoszony <span class=\"count\">(%s)</span>"
+
+#: classes/class-bbpress-report-content.php:199
+#, fuzzy
+msgctxt "Mark topic as reported"
+msgid "Reported"
+msgstr "Zgłoszone"
+
+#: classes/class-bbpress-report-content.php:250
+#: classes/class-bbpress-report-content.php:553
+msgid "Report"
+msgstr "Zgłoś"
+
+#: classes/class-bbpress-report-content.php:251
+#: classes/class-bbpress-report-content.php:554
+#: classes/class-bbpress-report-content.php:848
+#: classes/class-bbpress-report-content.php:976
+msgid "Unreport"
+msgstr "Usuń zgłoszenie"
+
+#: classes/class-bbpress-report-content.php:268
+#: classes/class-bbpress-report-content.php:571
+msgid "Report inappropriate content"
+msgstr "Zgłoś nieprawidlową treść"
+
+#: classes/class-bbpress-report-content.php:336
+msgid ""
+"<strong>ERROR</strong>: There was a problem unmarking the topic as reported."
+msgstr ""
+"<strong>BŁĄD</strong>: Nastąpił błąd w usuwaniu oznaczenia tego tematu jako "
+"zgłoszonego."
+
+#: classes/class-bbpress-report-content.php:336
+msgid "<strong>ERROR</strong>: There was a problem reporting the topic."
+msgstr "<strong>BŁĄD</strong>: Nastąpił błąd w zgłaszaniu tego tematu."
+
+#: classes/class-bbpress-report-content.php:641
+msgid ""
+"<strong>ERROR</strong>: There was a problem unmarking the reply as reported."
+msgstr ""
+"<strong>BŁĄD</strong>: Nastąpił błąd w usuwania oznaczenia tej odpowiedzi "
+"jako zgłoszonej."
+
+#: classes/class-bbpress-report-content.php:641
+msgid "<strong>ERROR</strong>: There was a problem reporting the reply."
+msgstr "<strong>BŁĄD</strong>: Nastąpił błąd w zgłaszaniu tej odpowiedzi."
+
+#: classes/class-bbpress-report-content.php:795
+msgid "This topic has been reported for inappropriate content"
+msgstr "Temat został zgłoszony za nieprawidłową treść."
+
+#: classes/class-bbpress-report-content.php:820
+msgid "<em>This reply has been reported for inappropriate content.</em>"
+msgstr "<em>Odpowiedź została zgłoszona za nieprawidłową treść.</em>"
+
+#: classes/class-bbpress-report-content.php:848
+msgid "Mark the topic as unreported"
+msgstr "Usuń zgłoszenie w tym temacie"
+
+#: classes/class-bbpress-report-content.php:877
+msgid "The topic was not found!"
+msgstr "Temat nie został odnaleziony!"
+
+#: classes/class-bbpress-report-content.php:880
+#: classes/class-bbpress-report-content.php:1008
+msgid "You do not have the permission to do that!"
+msgstr "Nie masz uprawnień do zrobienia tego!"
+
+#: classes/class-bbpress-report-content.php:939
+msgid "There was a problem unreporting the topic \"%1$s\"."
+msgstr "Nastąpił problem w usuwaniu zgłoszenia w temacie \"%1$s\"."
+
+#: classes/class-bbpress-report-content.php:939
+msgid "Topic \"%1$s\" successfully unreported."
+msgstr "Temat \"%1$s\" prawidłowo oznaczony jako niezgłoszony"
+
+#: classes/class-bbpress-report-content.php:976
+msgid "Mark the reply as unreported"
+msgstr "Usuń zgłoszenie odpowiedzi"
+
+#: classes/class-bbpress-report-content.php:1005
+msgid "The reply was not found!"
+msgstr "Odpowiedź nie została odnaleziona!"
+
+#: classes/class-bbpress-report-content.php:1067
+msgid "There was a problem unreporting the reply \"%1$s\"."
+msgstr "Nastąpił problem w usuwaniu zgłoszenia w odpowiedzi  \"%1$s\"."
+
+#: classes/class-bbpress-report-content.php:1067
+msgid "Reply \"%1$s\" successfully unreported."
+msgstr "Prawidłowo usunięto zgłoszenie w odpowiedzi  \"%1$s\""
+
+#: classes/class-bbpress-report-content.php:1093
+#: classes/class-bbpress-report-content.php:1132
+msgid "Reported By"
+msgstr "Zgłoszone przez"
+
+#: classes/class-bbpress-report-content.php:1171
+msgid "Guest"
+msgstr "Gość"
+
+#. Plugin Name of the plugin/theme
+msgid "bbPress - Report Content"
+msgstr "bbPress - Zgłoś Treść"
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.josheaton.org/wordpress-plugins/bbpress-report-content/"
+msgstr "http://www.josheaton.org/wordpress-plugins/bbpress-report-content/"
+
+#. Description of the plugin/theme
+msgid "Allows users to report inappropriate content in topics and replies."
+msgstr ""
+"Pozwól użytkownikom zgłaszać nieprawidłową treść w tematach i odpowiedziach."
+
+#. Author of the plugin/theme
+msgid "Josh Eaton"
+msgstr "Josh Eaton"
+
+#. Author URI of the plugin/theme
+msgid "http://www.josheaton.org/"
+msgstr "http://www.josheaton.org/"
