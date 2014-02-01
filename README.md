@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: bbpress, topics, replies, report, content, spam  
 Requires at least: 3.6  
 Tested up to: 3.8.1  
-Stable tag: 1.0.2  
+Stable tag: 1.0.3  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -27,8 +27,10 @@ bbPress - Report Content is fully internationalized and ready for translation:
 
 The following translations are currently available:
 
-* Spanish (es_ES) - [Andrew Kurtis - WebHostingHub](http://www.webhostinghub.com/)
+* Finnish (fi) - [Marko Kaartinen](https://github.com/MarkoKaartinen)
 * French (fr_FR) - [Matthieu Durocher](http://technocyclope.com/)
+* Polish (pl_PL) - Paulina
+* Spanish (es_ES) - [Andrew Kurtis - WebHostingHub](http://www.webhostinghub.com/)
 
 New language packs, or updates to existing ones, can be sent via GitHub or by [contacting me](http://www.josheaton.org/contact/).
 
@@ -55,6 +57,11 @@ The user who reported the topic or reply is stored as post meta and displayed as
 
 ## Changelog ##
 
+### 1.0.3 - 2014-01-31 ###
+
+* Enhancement - Polish translation (props Paulina)
+* Enhancement - Finnish translation (props Marko Kaartinen)
+
 ### 1.0.2 - 2014-01-30 ###
 
 * Fix - Plugin was loading the wrong directory for language files.
@@ -72,6 +79,13 @@ The user who reported the topic or reply is stored as post meta and displayed as
 * Initial release
 
 ## Upgrade Notice ##
+
+### 1.0.3 ###
+
+Translation update only.
+
+* Enhancement - Polish translation (props Paulina)
+* Enhancement - Finnish translation (props Marko Kaartinen)
 
 ### 1.0.2 ###
 
