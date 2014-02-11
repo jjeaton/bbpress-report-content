@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: bbpress, topics, replies, report, content, spam  
 Requires at least: 3.6  
 Tested up to: 3.8.1  
-Stable tag: 1.0.3  
+Stable tag: 1.0.4  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -29,6 +29,7 @@ The following translations are currently available:
 
 * Finnish (fi) - [Marko Kaartinen](https://github.com/MarkoKaartinen)
 * French (fr_FR) - [Matthieu Durocher](http://technocyclope.com/)
+* German (de_DE) - [Alexander Ihrig](http://www.thunderbird-mail.de/)
 * Polish (pl_PL) - Paulina
 * Spanish (es_ES) - [Andrew Kurtis - WebHostingHub](http://www.webhostinghub.com/)
 
@@ -57,6 +58,10 @@ The user who reported the topic or reply is stored as post meta and displayed as
 
 ## Changelog ##
 
+### 1.0.4 - 2014-02-11 ###
+
+* Enhancement - German translation (props Alexander Ihrig)
+
 ### 1.0.3 - 2014-01-31 ###
 
 * Enhancement - Polish translation (props Paulina)
@@ -79,6 +84,12 @@ The user who reported the topic or reply is stored as post meta and displayed as
 * Initial release
 
 ## Upgrade Notice ##
+
+### 1.0.4 ###
+
+Translation update only.
+
+* Enhancement - German translation (props Alexander Ihrig)
 
 ### 1.0.3 ###
 

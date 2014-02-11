@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the bbPress - Report Content package.
 msgid ""
 msgstr ""
-"Project-Id-Version: bbPress - Report Content 1.0.3\n"
+"Project-Id-Version: bbPress - Report Content 1.0.4\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/bbpress-report-"
 "content\n"
 "POT-Creation-Date: 2014-02-01 02:39:36+00:00\n"
