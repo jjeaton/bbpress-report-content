@@ -33,3 +33,6 @@ require_once( plugin_dir_path( __FILE__ ) . 'classes/class-bbpress-report-conten
 
 // Get the class instance
 add_action( 'plugins_loaded', array( 'bbp_ReportContent', 'get_instance' ) );
+
+// Register activation hook
+register_activation_hook( __FILE__, array( 'bbp_ReportContent', 'activation_check' ) );

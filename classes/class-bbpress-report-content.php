@@ -33,6 +33,9 @@ class bbp_ReportContent {
 		// Get plugin path
 		$this->plugin_path = dirname( plugin_dir_path( __FILE__ ) );
 
+		// Stopgap in case somehow bbPress becomes inactive after activation
+		add_action( 'admin_init', array( 'bbp_ReportContent', 'check_for_bbpress' ) );
+
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
@@ -107,6 +110,10 @@ class bbp_ReportContent {
 	 */
 	public static function get_instance() {
 
+		if ( ! self::is_bbpress_active() ) {
+			return;
+		}
+
 		// If the single instance hasn't been set, set it now.
 		if ( null == self::$instance ) {
 			self::$instance = new self;
@@ -127,6 +134,59 @@ class bbp_ReportContent {
 
 		load_textdomain( $domain, WP_LANG_DIR . '/' . $domain . '/' . $domain . '-' . $locale . '.mo' );
 		load_plugin_textdomain( $domain, FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/lang/' );
+	}
+
+	/**
+	 * Checks if bbPress is active.
+	 *
+	 * @since 1.0.5
+	 * @return boolean
+	 */
+	public static function is_bbpress_active() {
+		return class_exists( 'bbPress' );
+	}
+
+	/**
+	 * Check for bbPress on activation.
+	 *
+	 * @since 1.0.5
+	 * @return void
+	 */
+	public static function activation_check() {
+	    if ( ! self::is_bbpress_active() ) {
+	        deactivate_plugins( plugin_basename( __FILE__ ) );
+	        wp_die( __( 'bbPress - Report Content requires bbPress to be activated.', 'bbp-report-content' ) );
+	    }
+	}
+
+	/**
+	 * Check for bbPress on admin load.
+	 *
+	 * @since 1.0.5
+	 * @return void
+	 */
+	public static function check_for_bbpress() {
+		if ( ! self::is_bbpress_active() ) {
+			if ( is_plugin_active( plugin_basename( __FILE__ ) ) ) {
+				deactivate_plugins( plugin_basename( __FILE__ ) );
+
+				add_action( 'admin_notices', array( 'bbp_ReportContent', 'disabled_notice' ) );
+
+				if ( isset( $_GET['activate'] ) ) {
+					unset( $_GET['activate'] );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Display a notice when plugin is disabled due to missing dependencies.
+	 *
+	 * @since 1.0.5
+	 * @return void
+	 */
+	public static function disabled_notice() {
+		echo '<div class="updated"><p><strong>' . esc_html__( 'bbPress - Report Content was deactivated. This plugin requires bbPress to be activated.', 'bbp-report-content' ) . '</strong></p></div>';
 	}
 
 	/**
