@@ -4,7 +4,7 @@ Contributors: jjeaton
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7DR8UF55NRFTS  
 Tags: bbpress, topics, replies, report, content, spam  
 Requires at least: 3.6  
-Tested up to: 3.8.1  
+Tested up to: 4.0  
 Stable tag: 1.0.5  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
