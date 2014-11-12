@@ -27,6 +27,7 @@ bbPress - Report Content is fully internationalized and ready for translation:
 
 The following translations are currently available:
 
+* Croatian (hr) - Sanjin Barac
 * Finnish (fi) - [Marko Kaartinen](https://github.com/MarkoKaartinen)
 * French (fr_FR) - [Matthieu Durocher](http://technocyclope.com/)
 * German (de_DE) - [Alexander Ihrig](http://www.thunderbird-mail.de/)
@@ -57,6 +58,11 @@ The user who reported the topic or reply is stored as post meta and displayed as
 3. Front end display of a reported topic.
 
 ## Changelog ##
+
+### 1.0.5 - 2014-11-12 ###
+
+* Enhancement - Croatian translation (props Sanjin Barac)
+* Fix - Require bbPress to be activated before loading.
 
 ### 1.0.4 - 2014-02-11 ###
 
