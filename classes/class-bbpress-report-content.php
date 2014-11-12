@@ -319,13 +319,20 @@ class bbp_ReportContent {
 		$reported = $this->is_topic_reported( $topic->ID );
 
 		// Only display un-report link for moderators and up
-		if ( $reported && !current_user_can( 'moderate', $topic->ID ) )
+		if ( $reported && ! current_user_can( 'moderate', $topic->ID ) ) {
 			return;
+		}
 
 		$display = $reported ? $r['unreport_text'] : $r['report_text'];
 		$uri     = add_query_arg( array( 'action' => 'bbp_rc_toggle_topic_report', 'topic_id' => $topic->ID ) );
 		$uri     = wp_nonce_url( $uri, 'report-topic_' . $topic->ID );
-		$retval  = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="bbp-topic-report-link" title="' . __( 'Report inappropriate content', 'bbpress-report-content' ) . '">' . $display . '</a>' . $r['link_after'];
+		$classes = array( 'bbp-topic-report-link' );
+		if ( true === $reported ) {
+			$classes[] = 'reported';
+		} else {
+			$classes[] = 'unreported';
+		}
+		$retval  = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="' . join( ' ', array_map( 'esc_attr', $classes ) ) . '" title="' . __( 'Report inappropriate content', 'bbpress-report-content' ) . '">' . $display . '</a>' . $r['link_after'];
 
 		return apply_filters( 'bbp_rc_get_topic_report_link', $retval, $r );
 	}
@@ -622,15 +629,20 @@ class bbp_ReportContent {
 		$reported = $this->is_reply_reported( $reply->ID );
 
 		// Only display un-report link for
-		if ( $reported && !current_user_can( 'moderate', $reply->ID ) )
+		if ( $reported && ! current_user_can( 'moderate', $reply->ID ) ) {
 			return;
+		}
 
 		$display  = $reported ? $r['unreport_text'] : $r['report_text'];
 		$uri      = add_query_arg( array( 'action' => 'bbp_rc_toggle_reply_report', 'reply_id' => $reply->ID ) );
 		$uri      = wp_nonce_url( $uri, 'report-reply_' . $reply->ID );
-		$retval   = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="bbp-reply-report-link" title="' . __( 'Report inappropriate content', 'bbpress-report-content' ) . '">' . $display . '</a>' . $r['link_after'];
-
-
+		$classes = array( 'bbp-reply-report-link' );
+		if ( true === $reported ) {
+			$classes[] = 'reported';
+		} else {
+			$classes[] = 'unreported';
+		}
+		$retval   = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="' . join( ' ', array_map( 'esc_attr', $classes ) ) . '" title="' . __( 'Report inappropriate content', 'bbpress-report-content' ) . '">' . $display . '</a>' . $r['link_after'];
 
 		return apply_filters( 'bbp_rc_get_reply_report_link', $retval, $r );
 	}

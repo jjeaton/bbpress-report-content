@@ -64,6 +64,7 @@ The user who reported the topic or reply is stored as post meta and displayed as
 
 * Enhancement - Croatian translation (props Sanjin Barac)
 * Enhancement - Italian translation (props Barbara Lerici)
+* Enhancement - Add "reported" or "unreported" classes to the report/unreport links to signify current state.
 * Fix - Require bbPress to be activated before loading.
 * Fix - Errors in es_ES translation (props Barbara Lerici)
 
