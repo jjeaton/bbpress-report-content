@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: bbpress, topics, replies, report, content, spam  
 Requires at least: 3.6  
 Tested up to: 3.8.1  
-Stable tag: 1.0.4  
+Stable tag: 1.0.5  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -67,6 +67,7 @@ The user who reported the topic or reply is stored as post meta and displayed as
 * Enhancement - Add "reported" or "unreported" classes to the report/unreport links to signify current state.
 * Fix - Require bbPress to be activated before loading.
 * Fix - Errors in es_ES translation (props Barbara Lerici)
+* Tweak - Updated POT file to add new strings.
 
 ### 1.0.4 - 2014-02-11 ###
 

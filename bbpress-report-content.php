@@ -14,7 +14,7 @@
  * Plugin Name: bbPress - Report Content
  * Plugin URI:  http://www.josheaton.org/wordpress-plugins/bbpress-report-content/
  * Description: Allows users to report inappropriate content in topics and replies.
- * Version:     1.0.4
+ * Version:     1.0.5
  * Author:      Josh Eaton
  * Author URI:  http://www.josheaton.org/
  * Text Domain: bbpress-report-content

@@ -17,7 +17,7 @@
  */
 class bbp_ReportContent {
 
-	protected $version = '1.0.4';
+	protected $version = '1.0.5';
 	protected $plugin_slug = 'bbpress-report-content';
 	protected static $instance = null;
 	protected $plugin_screen_hook_suffix = null;
