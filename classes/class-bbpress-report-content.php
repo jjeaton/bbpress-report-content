@@ -186,7 +186,7 @@ class bbp_ReportContent {
 	 * @return void
 	 */
 	public static function disabled_notice() {
-		echo '<div class="updated"><p><strong>' . esc_html__( 'bbPress - Report Content was deactivated. This plugin requires bbPress to be activated.', 'bbp-report-content' ) . '</strong></p></div>';
+		echo '<div class="updated"><p><strong>' . esc_html__( 'bbPress - Report Content was deactivated. This plugin requires bbPress to be active.', 'bbp-report-content' ) . '</strong></p></div>';
 	}
 
 	/**
