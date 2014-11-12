@@ -31,6 +31,7 @@ The following translations are currently available:
 * Finnish (fi) - [Marko Kaartinen](https://github.com/MarkoKaartinen)
 * French (fr_FR) - [Matthieu Durocher](http://technocyclope.com/)
 * German (de_DE) - [Alexander Ihrig](http://www.thunderbird-mail.de/)
+* Italian (it_IT) - Barbara Lerici
 * Polish (pl_PL) - Paulina
 * Spanish (es_ES) - [Andrew Kurtis - WebHostingHub](http://www.webhostinghub.com/)
 
@@ -62,7 +63,9 @@ The user who reported the topic or reply is stored as post meta and displayed as
 ### 1.0.5 - 2014-11-12 ###
 
 * Enhancement - Croatian translation (props Sanjin Barac)
+* Enhancement - Italian translation (props Barbara Lerici)
 * Fix - Require bbPress to be activated before loading.
+* Fix - Errors in es_ES translation (props Barbara Lerici)
 
 ### 1.0.4 - 2014-02-11 ###
 
