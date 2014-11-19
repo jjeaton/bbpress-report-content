@@ -60,6 +60,10 @@ The user who reported the topic or reply is stored as post meta and displayed as
 
 ## Changelog ##
 
+### 1.0.6 ###
+
+* Updated Croatian translation
+
 ### 1.0.5 - 2014-11-12 ###
 
 * Enhancement - Croatian translation (props Sanjin Barac)
