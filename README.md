@@ -27,6 +27,7 @@ bbPress - Report Content is fully internationalized and ready for translation:
 
 The following translations are currently available:
 
+* Brazilian Portuguese (pt_BR) - [espellcaste](https://profiles.wordpress.org/espellcaste)
 * Croatian (hr) - Sanjin Barac
 * Finnish (fi) - [Marko Kaartinen](https://github.com/MarkoKaartinen)
 * French (fr_FR) - [Matthieu Durocher](http://technocyclope.com/)
