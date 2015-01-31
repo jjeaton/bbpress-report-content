@@ -320,6 +320,7 @@ class bbp_ReportContent {
 
 		// Only display un-report link for moderators and up
 		if ( $reported && ! current_user_can( 'moderate', $topic->ID ) ) {
+
 			return;
 		}
 
@@ -327,12 +328,13 @@ class bbp_ReportContent {
 		$uri     = add_query_arg( array( 'action' => 'bbp_rc_toggle_topic_report', 'topic_id' => $topic->ID ) );
 		$uri     = wp_nonce_url( $uri, 'report-topic_' . $topic->ID );
 		$classes = array( 'bbp-topic-report-link' );
+		$title = ( true === $reported ) ? __( 'Unreport inappropriate content', 'bbpress-report-content' ) : __( 'Report inappropriate content', 'bbpress-report-content' );
 		if ( true === $reported ) {
 			$classes[] = 'reported';
 		} else {
 			$classes[] = 'unreported';
 		}
-		$retval  = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="' . join( ' ', array_map( 'esc_attr', $classes ) ) . '" title="' . __( 'Report inappropriate content', 'bbpress-report-content' ) . '">' . $display . '</a>' . $r['link_after'];
+		$retval  = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="' . join( ' ', array_map( 'esc_attr', $classes ) ) . '" title="' . $title . '">' . $display . '</a>' . $r['link_after'];
 
 		return apply_filters( 'bbp_rc_get_topic_report_link', $retval, $r );
 	}
@@ -637,12 +639,13 @@ class bbp_ReportContent {
 		$uri      = add_query_arg( array( 'action' => 'bbp_rc_toggle_reply_report', 'reply_id' => $reply->ID ) );
 		$uri      = wp_nonce_url( $uri, 'report-reply_' . $reply->ID );
 		$classes = array( 'bbp-reply-report-link' );
+		$title = ( true === $reported ) ? __( 'Unreport inappropriate content', 'bbpress-report-content' ) : __( 'Report inappropriate content', 'bbpress-report-content' );
 		if ( true === $reported ) {
 			$classes[] = 'reported';
 		} else {
 			$classes[] = 'unreported';
 		}
-		$retval   = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="' . join( ' ', array_map( 'esc_attr', $classes ) ) . '" title="' . __( 'Report inappropriate content', 'bbpress-report-content' ) . '">' . $display . '</a>' . $r['link_after'];
+		$retval   = $r['link_before'] . '<a href="' . esc_url( $uri ) . '" class="' . join( ' ', array_map( 'esc_attr', $classes ) ) . '" title="' . $title . '">' . $display . '</a>' . $r['link_after'];
 
 		return apply_filters( 'bbp_rc_get_reply_report_link', $retval, $r );
 	}
