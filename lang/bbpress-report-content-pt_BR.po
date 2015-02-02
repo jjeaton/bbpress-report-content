@@ -1,0 +1,160 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/bbpress-report-"
+"content\n"
+"POT-Creation-Date: 2014-11-12 13:47:12+00:00\n"
+"PO-Revision-Date: 2015-01-30 23:26-0300\n"
+"Last-Translator: Renato Alves <espellcaste@gmail.com>\n"
+"Language-Team: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.3\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: classes/class-bbpress-report-content.php:158
+msgid "bbPress - Report Content requires bbPress to be activated."
+msgstr ""
+"bbPress - Denunciar Conteúdo precisa do bbPress ativado para funcionar."
+
+#: classes/class-bbpress-report-content.php:189
+msgid ""
+"bbPress - Report Content was deactivated. This plugin requires bbPress to be "
+"activated."
+msgstr ""
+"bbPress - Denunciar Conteúdo foi desativado. Este plugin precisa do bbPress "
+"ativado para funcionar."
+
+#: classes/class-bbpress-report-content.php:239
+msgctxt "post"
+msgid "User Reported"
+msgstr "Usuário Denunciado"
+
+#: classes/class-bbpress-report-content.php:240
+msgctxt "post"
+msgid "User Reported <span class=\"count\">(%s)</span>"
+msgid_plural "User Reported <span class=\"count\">(%s)</span>"
+msgstr[0] "Tópico Denunciado <span class=\"count\">(%s)</span>"
+msgstr[1] "Tópicos Denunciados <span class=\"count\">(%s)</span>"
+
+#: classes/class-bbpress-report-content.php:259
+msgctxt "Mark topic as reported"
+msgid "Reported"
+msgstr "Denunciado"
+
+#: classes/class-bbpress-report-content.php:310
+#: classes/class-bbpress-report-content.php:620
+msgid "Report"
+msgstr "Denunciar conteúdo"
+
+#: classes/class-bbpress-report-content.php:311
+#: classes/class-bbpress-report-content.php:621
+#: classes/class-bbpress-report-content.php:920
+#: classes/class-bbpress-report-content.php:1048
+msgid "Unreport"
+msgstr "Retirar denúncia"
+
+#: classes/class-bbpress-report-content.php:335
+#: classes/class-bbpress-report-content.php:645
+msgid "Report inappropriate content"
+msgstr "Denunciar conteúdo inapropriado"
+
+#: classes/class-bbpress-report-content.php:403
+msgid ""
+"<strong>ERROR</strong>: There was a problem unmarking the topic as reported."
+msgstr ""
+"<strong>ERROR</strong>: Houve um problema ao desmarcar um tópico como "
+"denunciado."
+
+#: classes/class-bbpress-report-content.php:403
+msgid "<strong>ERROR</strong>: There was a problem reporting the topic."
+msgstr "<strong>ERROR</strong>: Houve um problema ao denunciar o tópico."
+
+#: classes/class-bbpress-report-content.php:713
+msgid ""
+"<strong>ERROR</strong>: There was a problem unmarking the reply as reported."
+msgstr ""
+"<strong>ERROR</strong>: Houve um problema ao desmarcar uma resposta como "
+"denunciada."
+
+#: classes/class-bbpress-report-content.php:713
+msgid "<strong>ERROR</strong>: There was a problem reporting the reply."
+msgstr "<strong>ERROR</strong>: Houve um problema ao denunciar a resposta."
+
+#: classes/class-bbpress-report-content.php:867
+msgid "This topic has been reported for inappropriate content"
+msgstr "Este tópico foi denunciado por possuir conteúdo impróprio."
+
+#: classes/class-bbpress-report-content.php:892
+msgid "<em>This reply has been reported for inappropriate content.</em>"
+msgstr "<em>Esta resposta foi denunciada por possuir conteúdo impróprio.</em>"
+
+#: classes/class-bbpress-report-content.php:920
+msgid "Mark the topic as unreported"
+msgstr "Retirar a denúncia do tópico"
+
+#: classes/class-bbpress-report-content.php:949
+msgid "The topic was not found!"
+msgstr "O tópico não foi encontrado!"
+
+#: classes/class-bbpress-report-content.php:952
+#: classes/class-bbpress-report-content.php:1080
+msgid "You do not have the permission to do that!"
+msgstr "Você não tem permissão para realizar esta tarefa!"
+
+#: classes/class-bbpress-report-content.php:1011
+msgid "There was a problem unreporting the topic \"%1$s\"."
+msgstr "Houve um problema ao retirar a denúncia do tópico  \"%1$s\"."
+
+#: classes/class-bbpress-report-content.php:1011
+msgid "Topic \"%1$s\" successfully unreported."
+msgstr "Retirada com sucesso a denúncia do tópico  \"%1$s\"."
+
+#: classes/class-bbpress-report-content.php:1048
+msgid "Mark the reply as unreported"
+msgstr "Retirar a denúncia da resposta"
+
+#: classes/class-bbpress-report-content.php:1077
+msgid "The reply was not found!"
+msgstr "A resposta não foi encontrada!"
+
+#: classes/class-bbpress-report-content.php:1139
+msgid "There was a problem unreporting the reply \"%1$s\"."
+msgstr "Houve um problema ao retirar a denúncia da resposta  \"%1$s\"."
+
+#: classes/class-bbpress-report-content.php:1139
+msgid "Reply \"%1$s\" successfully unreported."
+msgstr "Retirada com sucesso a denúncia da resposta  \"%1$s\"."
+
+#: classes/class-bbpress-report-content.php:1165
+#: classes/class-bbpress-report-content.php:1204
+msgid "Reported By"
+msgstr "Denunciado Por"
+
+#: classes/class-bbpress-report-content.php:1243
+msgid "Guest"
+msgstr "Convidado"
+
+#. Plugin Name of the plugin/theme
+msgid "bbPress - Report Content"
+msgstr "bbPress - Denunciar Conteúdo"
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.josheaton.org/wordpress-plugins/bbpress-report-content/"
+msgstr "http://www.josheaton.org/wordpress-plugins/bbpress-report-content/"
+
+#. Description of the plugin/theme
+msgid "Allows users to report inappropriate content in topics and replies."
+msgstr ""
+"Permite aos usuários denunciar conteúdo impróprio em tópicos e respostas."
+
+#. Author of the plugin/theme
+msgid "Josh Eaton"
+msgstr "Josh Eaton"
+
+#. Author URI of the plugin/theme
+msgid "http://www.josheaton.org/"
+msgstr "http://www.josheaton.org/"
