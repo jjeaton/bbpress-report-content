@@ -54,23 +54,23 @@ msgstr "Ilmoita aiheettomasta sisällöstä"
 msgid ""
 "<strong>ERROR</strong>: There was a problem unmarking the topic as reported."
 msgstr ""
-"<strongVIRHE</strong>: Ongelma aiheen ilmoituksen merkitsemisessä "
+"<strong>VIRHE</strong>: Ongelma aiheen ilmoituksen merkitsemisessä "
 "peruutetuksi."
 
 #: classes/class-bbpress-report-content.php:336
 msgid "<strong>ERROR</strong>: There was a problem reporting the topic."
-msgstr "<strongVIRHE</strong>: Ongelma aiheen ilmoittamisessa."
+msgstr "<strong>VIRHE</strong>: Ongelma aiheen ilmoittamisessa."
 
 #: classes/class-bbpress-report-content.php:641
 msgid ""
 "<strong>ERROR</strong>: There was a problem unmarking the reply as reported."
 msgstr ""
-"<strongVIRHE</strong>: Ongelma vastauksen ilmoituksen merkitsemisessä "
+"<strong>VIRHE</strong>: Ongelma vastauksen ilmoituksen merkitsemisessä "
 "peruutetuksi."
 
 #: classes/class-bbpress-report-content.php:641
 msgid "<strong>ERROR</strong>: There was a problem reporting the reply."
-msgstr "<strongVIRHE</strong>: Ongelma vastauksen ilmoittamisessa."
+msgstr "<strong>VIRHE</strong>: Ongelma vastauksen ilmoittamisessa."
 
 #: classes/class-bbpress-report-content.php:795
 msgid "This topic has been reported for inappropriate content"
