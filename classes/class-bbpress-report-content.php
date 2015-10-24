@@ -274,7 +274,8 @@ class bbp_ReportContent {
 	public function add_topic_admin_links( $links, $topic_id ) {
 
 		// Only display for logged in users
-		if ( ! is_user_logged_in() )
+		// Do not show "Report" on posts written by users that can moderate (people should not report such users)
+		if ( ! is_user_logged_in() || ( user_can( get_post_field( 'post_author', $topic_id ), 'moderate' ) ) ;)
 			return $links;
 
 		$args = array();
