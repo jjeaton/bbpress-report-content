@@ -42,6 +42,7 @@ class bbp_ReportContent {
 		/************************************************************************
 		 * Admin
 		 ***********************************************************************/
+
 		// Register post status
 		add_action( 'bbp_register_post_statuses',       array( $this, 'register_post_status'         )           );
 
@@ -66,9 +67,11 @@ class bbp_ReportContent {
 		add_filter( 'bbp_admin_replies_column_headers', array( $this, 'admin_replies_column_headers' )           );
 		add_action( 'bbp_admin_replies_column_data',    array( $this, 'admin_replies_column_data'    ),   10,  2 );
 
+
 		/************************************************************************
 		 * Topics
 		 ***********************************************************************/
+
 		// Add status to list of topic statuses
 		add_filter( 'bbp_get_topic_statuses',           array( $this, 'add_topic_status'      )           );
 
@@ -84,10 +87,14 @@ class bbp_ReportContent {
 		// Add notice to reported topic
 		add_action( 'bbp_template_before_single_topic', array( $this, 'output_topic_notice'   )           );
 
+		// Sends an email when a topic is reported
+		add_action( 'pre_post_update', 					array( $this, 'topic_report_notify_admin' ) 	  );
+
 
 		/************************************************************************
 		 * Replies
 		 ***********************************************************************/
+
 		// Add admin links
 		add_filter( 'bbp_reply_admin_links',            array( $this, 'add_reply_admin_links' ),   10,  2 );
 
@@ -99,6 +106,9 @@ class bbp_ReportContent {
 
 		// Add notice to reported reply
 		add_action( 'bbp_theme_before_reply_content',   array( $this, 'output_reply_notice'   )           );
+
+		// Sends an email when a reply is reported
+		add_action( 'pre_post_update', 					array( $this, 'reply_report_notify_admin' ) 	  );
 	}
 
 	/**
@@ -1247,6 +1257,253 @@ class bbp_ReportContent {
 		}
 
 		return $username;
+	}
+
+	/**
+	 * Sends an email to the Blog admin informing him/her a topic was reported
+	 *
+	 * @since 1.0.6
+	 * 
+	 * @param integer $topic_id The topic ID
+	 *
+	 * @uses bbp_get_topic_id() Get the topic ID
+	 * @uses bbp_get_topic() Get the topic information
+	 * @uses get_reported_status_id() Get the status of the topic Reported/Unreported
+	 * @uses bbp_get_topic_content() Get the content of the topic
+	 * @uses bbp_get_topic_author_display_name() Get the name of the topic author
+	 * @uses get_username() Get the username of the user loggedin or not
+	 * @return string The email content when a user reports a topic in bbPress
+	 */
+	public function topic_report_notify_admin( $topic_id = 0 ) {
+
+		// Getting the topic information
+		$topic_id = bbp_get_topic_id( $topic_id );
+		$topic = bbp_get_topic( $topic_id );
+
+		// Bail if there is no topic
+		if ( empty( $topic ) )
+			return;
+
+		// Bail if topic is already reported
+		if ( $this->get_reported_status_id() === $topic->post_status )
+			return;
+
+		/** Mail ******************************************************************/
+
+		// Strip tags from text and setup mail data
+		$topic_title   		= strip_tags( bbp_get_topic_title( $topic_id ) );
+		$topic_content 		= strip_tags( bbp_get_topic_content( $topic_id ) );
+		$topic_url     		= get_permalink( $topic_id );
+		$topic_author_name 	= bbp_get_topic_author_display_name( $topic_id );
+		$blog_name     		= wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+		$subject 			= sprintf( __( 'Topic Reported on [%s]' ), $blog_name );
+
+		// User who reported the topic
+		$user_id  			= get_post_meta( $topic_id, '_bbp_report_user_id', true );
+		$user_who_reported  = $this->get_username( $user_id );
+		
+		// Get the email of the blog admin
+	    $to 				= get_bloginfo('admin_email');
+
+		// For plugins to filter messages
+		$message 			= sprintf( __( '%1$s had a topic reported by %2$s:
+		
+Content of the topic reported.
+
+%3$s
+
+%4$s
+
+Topic Link: %5$s
+
+-----------
+
+You are receiving this email because you are the admin. Login and visit the topic.', 'bbpress-report-content' ),
+
+			$topic_author_name,
+			$user_who_reported,
+			$topic_title,
+			$topic_content,
+			$topic_url
+		);
+
+		/**
+		 * Filters the admin email in case developers want to send to custom e-mail
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $to User email the notification is being sent to.
+		 */
+		$to = apply_filters( 'topic_report_notify_admin_to', $to );
+
+		/**
+		 * Filters the email notification subject that will be sent to admin
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $subject Email notification subject text.
+		 */
+		$subject = apply_filters( 'topic_report_notify_admin_subject', $subject, $blog_name );
+
+		/**
+		 * Filters the email notification message that will be sent to admin
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $message Email notification message text.
+		 * @param string $topic_author_name Name of the person who made the topic
+		 * @param string $user_who_reported  Name of the user who reported the topic
+		 * @param string $topic_title  Title of the topic reported
+		 * @param string $topic_content Content of the topic reported
+		 * @param string $topic_url URL permalink for the topic
+		 */
+		$message = apply_filters( 'topic_report_notify_admin_message', $message, $topic_author_name, $user_who_reported, $topic_title, $topic_content, $topic_url );
+
+		/** Send it ***************************************************************/
+
+	    wp_mail( $to, $subject, $message);
+
+	    /**
+	     * Fires after the email was sent
+	     *
+	     * @since 1.0.6
+	     *
+	     * @param int $topic_id Topic ID of the topic sent to
+	     * @param string Text of the subject of the email notification
+	     * @param string Text of the email notification
+	     */
+	    do_action( 'topic_report_notify_admin_action', $topic_id, $subject, $message );
+	}
+
+	/**
+	 * Sends an email to the Blog admin informing him/her a reply was reported
+	 *
+	 * @since 1.0.6
+	 * 
+	 * @param integer $reply_id The reply ID
+	 *
+	 * @uses bbp_get_reply_id() Get the reply ID
+	 * @uses bbp_get_reply() Get the reply information
+	 * @uses bbp_get_reply_topic_id() Getting the topic of the reply
+	 * @uses get_reported_status_id() Get the status of the reply Reported
+	 * @uses bbp_get_topic_title() Gets reply topic title
+	 * @uses bbp_get_reply_content() Get the content of the reply
+	 * @uses bbp_get_reply_url() Get the reply url
+	 * @uses bbp_get_reply_author_display_name() Get the name of the topic author
+	 * @uses get_username() Get the username of the user loggedin or not
+	 * @return string Sends an email to the admin when a user reports a reply in bbPress
+	 */
+	public function reply_report_notify_admin( $reply_id = 0 ) {
+
+		// Getting the reply ID
+		$reply_id = bbp_get_reply_id( $reply_id );
+		$reply 	  = bbp_get_reply( $reply_id );
+
+		// Return the topic id a reply belongs to
+		$topic_id = bbp_get_reply_topic_id( $reply_id );
+
+		// Bail if there is no reply
+		if ( empty( $reply ) )
+			return;
+
+		// Bail if reply is already reported
+		if ( $this->get_reported_status_id() === $reply->post_status )
+			return;
+
+		/** Mail ******************************************************************/
+
+		// Strip tags from text and setup mail data
+		
+		// Topic
+		$topic_title   		= strip_tags( bbp_get_topic_title( $topic_id ) );
+		$topic_url     		= get_permalink( $topic_id );
+
+		// Reply
+		$reply_content 		= strip_tags( bbp_get_reply_content( $reply_id ) );
+		$reply_author_name 	= bbp_get_reply_author_display_name( $reply_id );
+		$reply_url 			= bbp_get_reply_url( $reply_id );
+		
+		$blog_name     		= wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+		$subject 			= sprintf( __( 'Reply Reported on [%s]' ), $blog_name );
+
+		// User who reported the reply
+		$user_id  			= get_post_meta( $reply_id, '_bbp_report_user_id', true );
+		$user_who_reported  = $this->get_username( $user_id );
+		
+		// Get the email of the blog admin
+	    $to 				= get_bloginfo('admin_email');
+
+		// For plugins to filter messages
+		$message 			= sprintf( __( '%1$s had a reply reported by %2$s:
+		
+Content of the reply reported.
+
+Topic: %3$s
+
+Reply Content: %4$s
+
+Topic Link: %5$s
+Reply Link: %6$s
+
+-----------
+
+You are receiving this email because you are the admin. Login and visit the reply.', 'bbpress-report-content' ),
+
+			$reply_author_name,
+			$user_who_reported,
+			$topic_title,
+			$reply_content,
+			$topic_url,
+			$reply_url
+		);
+
+		/**
+		 * Filters the admin email in case developers want to send to custom e-mails
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $to User email the notification is being sent to.
+		 */
+		$to = apply_filters( 'reply_report_notify_admin_to', $to );
+
+		/**
+		 * Filters the email notification subject that will be sent to admin
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $subject Email notification subject text.
+		 */
+		$subject = apply_filters( 'reply_report_notify_admin_subject', $subject, $blog_name );
+
+		/**
+		 * Filters the email notification message that will be sent to the admin
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $message Email notification message text.
+		 * @param string $reply_author_name Name of the person who made the reply
+		 * @param string $user_who_reported  Name of the user who reported the reply
+		 * @param string $topic_title  Title of the topic thw reply reported belongs to
+		 * @param string $reply_content Content of the reply reported
+		 * @param string $topic_url URL permalink for the topic
+		 * @param string $reply_url URL permalink of the reply
+		 */
+		$message = apply_filters( 'reply_report_notify_admin_message', $message, $reply_author_name, $user_who_reported, $topic_title, $reply_content, $topic_url, $reply_url );
+
+		/** Send it ***************************************************************/
+
+	    wp_mail( $to, $subject, $message);
+
+	    /**
+	     * Fires after the email was sent
+	     *
+	     * @since 1.0.6
+	     *
+	     * @param int $reply_id Reply ID of the reply sent to
+	     * @param string Text of the subject of the email notification
+	     * @param string Text of the email notification
+	     */
+	    do_action( 'reply_report_notify_admin_action', $reply_id, $subject, $message );
 	}
 
 } // end class bbp_ReportContent
