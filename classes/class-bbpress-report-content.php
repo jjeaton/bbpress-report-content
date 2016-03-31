@@ -218,7 +218,7 @@ class bbp_ReportContent {
 			return;
 		?>
 		<style type="text/css">
-			.status-reported { background-color: rgba(215, 44, 44, 0.1);}
+			.status-reported { background-color: rgba(215, 44, 44, 0.1)!important;}
 		</style>
 		<?php
 	}
