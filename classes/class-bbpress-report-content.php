@@ -88,8 +88,9 @@ class bbp_ReportContent {
 		add_action( 'bbp_template_before_single_topic', array( $this, 'output_topic_notice'   )           );
 
 		// Sends an email when a topic is reported
-		add_action( 'pre_post_update', 					array( $this, 'topic_report_notify_admin' ) 	  );
-
+		//add_action( 'pre_post_update', 					array( $this, 'topic_report_notify_admin' ) 	  );
+        // The above was sending emails if a topic/reply was trashed or marked as spam
+        //add_action( 'bbp_rc_reported_topic', 					array( $this, 'topic_report_notify_admin' ) 	  );
 
 		/************************************************************************
 		 * Replies
@@ -108,7 +109,9 @@ class bbp_ReportContent {
 		add_action( 'bbp_theme_before_reply_content',   array( $this, 'output_reply_notice'   )           );
 
 		// Sends an email when a reply is reported
-		add_action( 'pre_post_update', 					array( $this, 'reply_report_notify_admin' ) 	  );
+		//add_action( 'pre_post_update', 					array( $this, 'reply_report_notify_admin' ) 	  );
+        // The above was sending emails if a topic/reply was trashed or marked as spam
+        //add_action( 'bbp_rc_reported_reply', 					array( $this, 'reply_report_notify_admin' ) 	  );
 	}
 
 	/**
@@ -469,10 +472,12 @@ class bbp_ReportContent {
 			return false;
 
 		// Execute pre report code
-		do_action( 'bbp_rc_report_topic', $topic_id );
+		do_action( 'bbp_rc_pre_report_topic', $topic_id );
 
 		// TODO: Spam trashes replies, let's check if we should do anything with replies
 		// when a topic is reported
+
+
 
 		// Add the user id of the user who reported
 		update_post_meta( $topic_id, '_bbp_report_user_id', wp_get_current_user()->ID );
@@ -483,6 +488,9 @@ class bbp_ReportContent {
 		// Set post status to report
 		$topic->post_status = $this->get_reported_status_id();
 
+        // Send Email
+        $this::topic_report_notify_admin($topic_id);
+
 		// No revisions
 		remove_action( 'pre_post_update', 'wp_save_post_revision' );
 
@@ -490,7 +498,7 @@ class bbp_ReportContent {
 		$topic_id = wp_update_post( $topic );
 
 		// Execute post report code
-		do_action( 'bbp_rc_reported_topic', $topic_id );
+		do_action( 'bbp_rc_post_reported_topic', $topic_id );
 
 		// Return topic_id
 		return $topic_id;
@@ -781,7 +789,7 @@ class bbp_ReportContent {
 			return false;
 
 		// Execute pre report code
-		do_action( 'bbp_rc_report_reply', $reply_id );
+		do_action( 'bbp_rc_pre_report_reply', $reply_id );
 
 		// Add the user id of the user who reported
 		update_post_meta( $reply_id, '_bbp_report_user_id', wp_get_current_user()->ID );
@@ -792,6 +800,9 @@ class bbp_ReportContent {
 		// Set post status to report
 		$reply->post_status = $this->get_reported_status_id();
 
+        // Send Email
+        $this::reply_report_notify_admin($reply_id);
+
 		// No revisions
 		remove_action( 'pre_post_update', 'wp_save_post_revision' );
 
@@ -799,7 +810,7 @@ class bbp_ReportContent {
 		$reply_id = wp_update_post( $reply );
 
 		// Execute post report code
-		do_action( 'bbp_rc_reported_reply', $reply_id );
+		do_action( 'bbp_rc_post_reported_reply', $reply_id );
 
 		// Return reply_id
 		return $reply_id;
@@ -1251,7 +1262,7 @@ class bbp_ReportContent {
 		// Check if user is logged in
 		if ( 0 != $user_id ) {
 			$user = get_userdata( $user_id );
-			$username = $user->user_login;
+			$username = $user->display_name;
 		} else {
 			$username = __('Guest', 'bbpress-report-content');
 		}
@@ -1314,11 +1325,7 @@ Content of the topic reported.
 
 %4$s
 
-Topic Link: %5$s
-
------------
-
-You are receiving this email because you are the admin. Login and visit the topic.', 'bbpress-report-content' ),
+Topic Link: %5$s ', 'bbpress-report-content' ),
 
 			$topic_author_name,
 			$user_who_reported,
@@ -1428,6 +1435,7 @@ You are receiving this email because you are the admin. Login and visit the topi
 
 		// User who reported the reply
 		$user_id  			= get_post_meta( $reply_id, '_bbp_report_user_id', true );
+
 		$user_who_reported  = $this->get_username( $user_id );
 		
 		// Get the email of the blog admin
@@ -1445,9 +1453,7 @@ Reply Content: %4$s
 Topic Link: %5$s
 Reply Link: %6$s
 
------------
-
-You are receiving this email because you are the admin. Login and visit the reply.', 'bbpress-report-content' ),
+', 'bbpress-report-content' ),
 
 			$reply_author_name,
 			$user_who_reported,
