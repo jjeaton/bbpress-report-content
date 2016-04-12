@@ -68,6 +68,13 @@ class bbp_ReportContent {
 		add_action( 'bbp_admin_replies_column_data',    array( $this, 'admin_replies_column_data'    ),   10,  2 );
 
 
+        /****************************************************
+         * Settings
+         ***************************************************/
+        // Add settings to the Dashboard
+        add_action( 'admin_init', array( $this, 'admin_settings' ) );
+
+
 		/************************************************************************
 		 * Topics
 		 ***********************************************************************/
@@ -1303,7 +1310,6 @@ class bbp_ReportContent {
 
 		// Strip tags from text and setup mail data
 		$topic_title   		= strip_tags( bbp_get_topic_title( $topic_id ) );
-		//$topic_content 		= strip_tags( bbp_get_topic_content( $topic_id ) );
         $topic_content      = bbp_get_topic_excerpt( $topic_id, 256 ) ;
 		$topic_url     		= get_permalink( $topic_id );
 		$topic_author_name 	= bbp_get_topic_author_display_name( $topic_id );
@@ -1315,11 +1321,12 @@ class bbp_ReportContent {
 		$user_who_reported  = $this->get_username( $user_id );
         $reporter     = get_userdata( $user_id );
         $user_who_reported_email  = $reporter->user_email;
-		
-		// Get the email of the blog admin TODO add a setting section for the user to enter the emails
-	    $recipients 		= explode( ',', 'admin@ajp.com.au,mark.dunn@ajp.com.au ' );
 
-		// For plugins to filter messages TODO fix this up to show the reporter email
+        // Get the email addresses from the settings page
+        $emails             = get_option('bbpress_recipient_emails');
+        $recipients 		= explode( PHP_EOL, $emails );
+
+		// For plugins to filter messages
 		$message 			= sprintf( __( '%1$s had a topic reported by %2$s, %6$s:
 		
 Content of the topic reported.
@@ -1339,13 +1346,13 @@ Topic Link: %5$s ', 'bbpress-report-content' ),
 		);
 
 		/**
-		 * Filters the admin email in case developers want to send to custom e-mail
+		 * Filters the recipients email in case developers want to send to custom e-mail
 		 *
 		 * @since 1.0.6
 		 *
 		 * @param string $to User email the notification is being sent to.
 		 */
-		$to = apply_filters( 'topic_report_notify_admin_to', $to );
+        $recipients = apply_filters( 'topic_report_notify_admin_to', $recipients );
 
 		/**
 		 * Filters the email notification subject that will be sent to admin
@@ -1370,12 +1377,13 @@ Topic Link: %5$s ', 'bbpress-report-content' ),
 		 */
 		$message = apply_filters( 'topic_report_notify_admin_message', $message, $topic_author_name, $user_who_reported, $topic_title, $topic_content, $topic_url );
 
-		/** Send it ***************************************************************/
 
+		/** Send it ***************************************************************/
 	    foreach( $recipients as $recipient ){
 
-            wp_mail( $recipient, $subject, $message);
-
+            if( is_email( trim( $recipient ) ) ){
+                wp_mail( $recipient, $subject, $message );
+            }
         }
 
 
@@ -1391,6 +1399,8 @@ Topic Link: %5$s ', 'bbpress-report-content' ),
 	     */
 	    do_action( 'topic_report_notify_admin_action', $topic_id, $subject, $message );
 	}
+
+
 
 	/**
 	 * Sends an email to the Blog admin informing him/her a reply was reported
@@ -1436,8 +1446,7 @@ Topic Link: %5$s ', 'bbpress-report-content' ),
 		$topic_url     		= get_permalink( $topic_id );
 
 		// Reply
-//		$reply_content 		= strip_tags( bbp_get_reply_content( $reply_id ) );
-        $reply_content      = bbp_get_reply_excerpt( $topic_id, 256 ) ;
+        $reply_content      = bbp_get_reply_excerpt( $reply_id, 256 ) ;
 		$reply_author_name 	= bbp_get_reply_author_display_name( $reply_id );
 		$reply_url 			= bbp_get_reply_url( $reply_id );
 		
@@ -1451,27 +1460,24 @@ Topic Link: %5$s ', 'bbpress-report-content' ),
         $reporter     = get_userdata( $user_id );
         $user_who_reported_email  = $reporter->user_email;
 
-        // Get the email of the blog admin TODO add a setting section for the user to enter the emails
-        $recipients 		= explode( ',', 'admin@ajp.com.au,mark.dunn@ajp.com.au' );
-
+        // Get the email addresses from the settings page
+        $emails             = get_option('bbpress_recipient_emails');
+        $recipients 		= explode( PHP_EOL, $emails );
 
 		// For plugins to filter messages
 		$message 			= sprintf( __( '%1$s had a reply reported by %2$s, %6$s:
 		
 Content of the reply reported.
 
-Topic: %3$s
+Reply Content: %3$s
 
-Reply Content: %4$s
-
-Topic Link: %5$s
-Reply Link: %6$s
+Topic Link: %4$s
+Reply Link: %5$s
 
 ', 'bbpress-report-content' ),
 
 			$reply_author_name,
 			$user_who_reported,
-			$topic_title,
 			$reply_content,
 			$topic_url,
 			$reply_url,
@@ -1479,13 +1485,13 @@ Reply Link: %6$s
 		);
 
 		/**
-		 * Filters the admin email in case developers want to send to custom e-mails
+		 * Filters the recipients email in case developers want to send to custom e-mails
 		 *
 		 * @since 1.0.6
 		 *
 		 * @param string $to User email the notification is being sent to.
 		 */
-		$to = apply_filters( 'reply_report_notify_admin_to', $to );
+		$recipients = apply_filters( 'reply_report_notify_admin_to', $recipients );
 
 		/**
 		 * Filters the email notification subject that will be sent to admin
@@ -1512,11 +1518,11 @@ Reply Link: %6$s
 		$message = apply_filters( 'reply_report_notify_admin_message', $message, $reply_author_name, $user_who_reported, $topic_title, $reply_content, $topic_url, $reply_url );
 
 		/** Send it ***************************************************************/
-
-
         foreach( $recipients as $recipient ){
 
-            wp_mail( $recipient, $subject, $message);
+            if( is_email( trim( $recipient ) ) ){
+                wp_mail( $recipient, $subject, $message );
+            }
 
         }
 
@@ -1531,5 +1537,79 @@ Reply Link: %6$s
 	     */
 	    do_action( 'reply_report_notify_admin_action', $reply_id, $subject, $message );
 	}
+
+
+
+    /**
+     * Add the settings section and fields and register them
+     */
+    public function admin_settings() {
+
+        // Add section to bbPress options
+        add_settings_section(
+            'bbp_report_content',                               // String for use in the 'id' attribute of tags.
+            'Report Content Settings',                          // Title of the section.
+            array( $this, '_bbprc_settings_description' ),      // Function that fills the section with the desired content. The function should echo its output.
+            'bbpress'                                           // The menu page on which to display this section.
+        );
+
+        // Add the form fields
+        add_settings_field(
+            'bbpress_recipient_emails',                         // String for use in the 'id' attribute of tags.
+            'Recipient Emails',                                 // Title of the field.
+            array( $this, '_bbpress_recipient_emails' ),        // Function that fills the field with the desired inputs as part of the larger form. Passed a single argument, the $args array. Name and id of the input should match the $id given to this function. The function should echo its output.
+            'bbpress',                                          // The menu page on which to display this field.
+            'bbp_report_content'                                // The section of the settings page in which to show the box
+        );
+
+        // Register the settings as part of the bbPress settings
+        register_setting(
+            'bbpress',                                          // A settings group name. Must exist prior to the register_setting call. This must match the group name in settings_fields()
+            'bbpress_recipient_emails',                         // The name of an option to sanitize and save.
+            array($this, 'bbpress_recipient_emails_sanitize')   // A callback function that sanitizes the option's value.
+            );
+
+    }
+
+
+
+    /**
+     * Output the settings section description
+     */
+    public function _bbprc_settings_description() {
+
+        echo 'Enter the email addresses of the users that will be notified when a post is reported as inappropriate, enter one email address per line';
+
+    }
+
+
+
+    /**
+     * Output the email address textarea
+     *
+     * @param $args
+     */
+    public function _bbpress_recipient_emails($args){
+        
+        $emails = get_option('bbpress_recipient_emails');
+
+        printf( '<textarea name="bbpress_recipient_emails" id="bbpress_recipient_emails"  cols="30" rows="5"> %1$s </textarea>', trim( $emails ) );
+    }
+
+
+
+    /**
+     * Sanitize the email address textarea
+     *
+     * @param $input
+     * @return string
+     */
+    public function bbpress_recipient_emails_sanitize($input) {
+
+        return strip_tags($input);
+    }
+    
+    
+
 
 } // end class bbp_ReportContent
