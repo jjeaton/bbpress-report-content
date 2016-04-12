@@ -1303,7 +1303,8 @@ class bbp_ReportContent {
 
 		// Strip tags from text and setup mail data
 		$topic_title   		= strip_tags( bbp_get_topic_title( $topic_id ) );
-		$topic_content 		= strip_tags( bbp_get_topic_content( $topic_id ) );
+		//$topic_content 		= strip_tags( bbp_get_topic_content( $topic_id ) );
+        $topic_content      = bbp_get_topic_excerpt( $topic_id, 256 ) ;
 		$topic_url     		= get_permalink( $topic_id );
 		$topic_author_name 	= bbp_get_topic_author_display_name( $topic_id );
 		$blog_name     		= wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
@@ -1312,12 +1313,14 @@ class bbp_ReportContent {
 		// User who reported the topic
 		$user_id  			= get_post_meta( $topic_id, '_bbp_report_user_id', true );
 		$user_who_reported  = $this->get_username( $user_id );
+        $reporter     = get_userdata( $user_id );
+        $user_who_reported_email  = $reporter->user_email;
 		
-		// Get the email of the blog admin
-	    $to 				= get_bloginfo('admin_email');
+		// Get the email of the blog admin TODO add a setting section for the user to enter the emails
+	    $recipients 		= explode( ',', 'admin@ajp.com.au,mark.dunn@ajp.com.au ' );
 
-		// For plugins to filter messages
-		$message 			= sprintf( __( '%1$s had a topic reported by %2$s:
+		// For plugins to filter messages TODO fix this up to show the reporter email
+		$message 			= sprintf( __( '%1$s had a topic reported by %2$s, %6$s:
 		
 Content of the topic reported.
 
@@ -1331,7 +1334,8 @@ Topic Link: %5$s ', 'bbpress-report-content' ),
 			$user_who_reported,
 			$topic_title,
 			$topic_content,
-			$topic_url
+			$topic_url,
+            $user_who_reported_email
 		);
 
 		/**
@@ -1368,7 +1372,13 @@ Topic Link: %5$s ', 'bbpress-report-content' ),
 
 		/** Send it ***************************************************************/
 
-	    wp_mail( $to, $subject, $message);
+	    foreach( $recipients as $recipient ){
+
+            wp_mail( $recipient, $subject, $message);
+
+        }
+
+
 
 	    /**
 	     * Fires after the email was sent
@@ -1426,7 +1436,8 @@ Topic Link: %5$s ', 'bbpress-report-content' ),
 		$topic_url     		= get_permalink( $topic_id );
 
 		// Reply
-		$reply_content 		= strip_tags( bbp_get_reply_content( $reply_id ) );
+//		$reply_content 		= strip_tags( bbp_get_reply_content( $reply_id ) );
+        $reply_content      = bbp_get_reply_excerpt( $topic_id, 256 ) ;
 		$reply_author_name 	= bbp_get_reply_author_display_name( $reply_id );
 		$reply_url 			= bbp_get_reply_url( $reply_id );
 		
@@ -1437,12 +1448,15 @@ Topic Link: %5$s ', 'bbpress-report-content' ),
 		$user_id  			= get_post_meta( $reply_id, '_bbp_report_user_id', true );
 
 		$user_who_reported  = $this->get_username( $user_id );
-		
-		// Get the email of the blog admin
-	    $to 				= get_bloginfo('admin_email');
+        $reporter     = get_userdata( $user_id );
+        $user_who_reported_email  = $reporter->user_email;
+
+        // Get the email of the blog admin TODO add a setting section for the user to enter the emails
+        $recipients 		= explode( ',', 'admin@ajp.com.au,mark.dunn@ajp.com.au' );
+
 
 		// For plugins to filter messages
-		$message 			= sprintf( __( '%1$s had a reply reported by %2$s:
+		$message 			= sprintf( __( '%1$s had a reply reported by %2$s, %6$s:
 		
 Content of the reply reported.
 
@@ -1460,7 +1474,8 @@ Reply Link: %6$s
 			$topic_title,
 			$reply_content,
 			$topic_url,
-			$reply_url
+			$reply_url,
+            $user_who_reported_email
 		);
 
 		/**
@@ -1498,7 +1513,12 @@ Reply Link: %6$s
 
 		/** Send it ***************************************************************/
 
-	    wp_mail( $to, $subject, $message);
+
+        foreach( $recipients as $recipient ){
+
+            wp_mail( $recipient, $subject, $message);
+
+        }
 
 	    /**
 	     * Fires after the email was sent
