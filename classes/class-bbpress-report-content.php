@@ -42,6 +42,7 @@ class bbp_ReportContent {
 		/************************************************************************
 		 * Admin
 		 ***********************************************************************/
+
 		// Register post status
 		add_action( 'bbp_register_post_statuses',       array( $this, 'register_post_status'         )           );
 
@@ -65,10 +66,24 @@ class bbp_ReportContent {
 		// Reply column headers
 		add_filter( 'bbp_admin_replies_column_headers', array( $this, 'admin_replies_column_headers' )           );
 		add_action( 'bbp_admin_replies_column_data',    array( $this, 'admin_replies_column_data'    ),   10,  2 );
+		
+		// Add Forum moderator to metabox
+		if ( get_option('bbpress_report_content_per_forum_moderator_mails') ) {
+			add_action( 'add_meta_boxes',				array( $this, 'add_metabox_moderator_mail'	 )			 );
+			add_action( 'bbp_forum_attributes_metabox_save', array( $this, 'admin_forum_attributes_metabox_save'), 10, 2 );
+		}
+
+        /****************************************************
+         * Settings
+         ***************************************************/
+        // Add settings to the Dashboard
+        add_action( 'admin_init', array( $this, 'admin_settings' ) );
+
 
 		/************************************************************************
 		 * Topics
 		 ***********************************************************************/
+
 		// Add status to list of topic statuses
 		add_filter( 'bbp_get_topic_statuses',           array( $this, 'add_topic_status'      )           );
 
@@ -84,10 +99,15 @@ class bbp_ReportContent {
 		// Add notice to reported topic
 		add_action( 'bbp_template_before_single_topic', array( $this, 'output_topic_notice'   )           );
 
+		// Sends an email when a topic is reported
+		//add_action( 'pre_post_update', 					array( $this, 'topic_report_notify_admin' ) 	  );
+        // The above was sending emails if a topic/reply was trashed or marked as spam
+        //add_action( 'bbp_rc_reported_topic', 					array( $this, 'topic_report_notify_admin' ) 	  );
 
 		/************************************************************************
 		 * Replies
 		 ***********************************************************************/
+
 		// Add admin links
 		add_filter( 'bbp_reply_admin_links',            array( $this, 'add_reply_admin_links' ),   10,  2 );
 
@@ -99,6 +119,11 @@ class bbp_ReportContent {
 
 		// Add notice to reported reply
 		add_action( 'bbp_theme_before_reply_content',   array( $this, 'output_reply_notice'   )           );
+
+		// Sends an email when a reply is reported
+		//add_action( 'pre_post_update', 					array( $this, 'reply_report_notify_admin' ) 	  );
+        // The above was sending emails if a topic/reply was trashed or marked as spam
+        //add_action( 'bbp_rc_reported_reply', 					array( $this, 'reply_report_notify_admin' ) 	  );
 	}
 
 	/**
@@ -208,7 +233,7 @@ class bbp_ReportContent {
 			return;
 		?>
 		<style type="text/css">
-			.status-reported { background-color: rgba(215, 44, 44, 0.1);}
+			.status-reported { background-color: rgba(215, 44, 44, 0.1)!important;}
 		</style>
 		<?php
 	}
@@ -459,10 +484,12 @@ class bbp_ReportContent {
 			return false;
 
 		// Execute pre report code
-		do_action( 'bbp_rc_report_topic', $topic_id );
+		do_action( 'bbp_rc_pre_report_topic', $topic_id );
 
 		// TODO: Spam trashes replies, let's check if we should do anything with replies
 		// when a topic is reported
+
+
 
 		// Add the user id of the user who reported
 		update_post_meta( $topic_id, '_bbp_report_user_id', wp_get_current_user()->ID );
@@ -473,6 +500,9 @@ class bbp_ReportContent {
 		// Set post status to report
 		$topic->post_status = $this->get_reported_status_id();
 
+        // Send Email
+        $this::topic_report_notify_admin($topic_id);
+
 		// No revisions
 		remove_action( 'pre_post_update', 'wp_save_post_revision' );
 
@@ -480,7 +510,7 @@ class bbp_ReportContent {
 		$topic_id = wp_update_post( $topic );
 
 		// Execute post report code
-		do_action( 'bbp_rc_reported_topic', $topic_id );
+		do_action( 'bbp_rc_post_reported_topic', $topic_id );
 
 		// Return topic_id
 		return $topic_id;
@@ -771,7 +801,7 @@ class bbp_ReportContent {
 			return false;
 
 		// Execute pre report code
-		do_action( 'bbp_rc_report_reply', $reply_id );
+		do_action( 'bbp_rc_pre_report_reply', $reply_id );
 
 		// Add the user id of the user who reported
 		update_post_meta( $reply_id, '_bbp_report_user_id', wp_get_current_user()->ID );
@@ -782,6 +812,9 @@ class bbp_ReportContent {
 		// Set post status to report
 		$reply->post_status = $this->get_reported_status_id();
 
+        // Send Email
+        $this::reply_report_notify_admin($reply_id);
+
 		// No revisions
 		remove_action( 'pre_post_update', 'wp_save_post_revision' );
 
@@ -789,7 +822,7 @@ class bbp_ReportContent {
 		$reply_id = wp_update_post( $reply );
 
 		// Execute post report code
-		do_action( 'bbp_rc_reported_reply', $reply_id );
+		do_action( 'bbp_rc_post_reported_reply', $reply_id );
 
 		// Return reply_id
 		return $reply_id;
@@ -1232,6 +1265,52 @@ class bbp_ReportContent {
 	}
 
 	/**
+	 * Adds a additional metabox for a moderator address
+	 */
+	public function add_metabox_moderator_mail() {
+		if ( get_post_type() == bbp_get_forum_post_type() ) {
+			add_meta_box(
+				'forum-moderator-mail',
+				esc_html__('Moderator E-Mail Address'),
+				array ( $this, 'render_moderator_mail_meta_box' ),
+				null,
+				'side'
+			);
+		}
+	}
+
+	/**
+	 * Renders a additional metabox for a moderator address
+	 *
+	 * @param WP_Post $post current WP_Post object
+	 */
+	public function render_moderator_mail_meta_box( $post ) {
+
+		// parent already has a moderator?
+		$parent_mail = get_post_meta($post->post_parent, '_bbp_forum_moderator_mail', true);
+		if ( $parent_mail !== false ) {
+			echo '<strong>Parent forum moderator address:</strong><br>' . esc_html($parent_mail) . '</p>';
+		}
+
+		// prefill with default
+		$mail = get_post_meta($post->ID, '_bbp_forum_moderator_mail', true);
+		echo '<strong>Moderator Mail:</strong><input type="text" name="forum-moderator-mail" value="'.esc_html($mail).'">';
+	}
+
+	/**
+	 * Save an optional mail adress per forum
+	 *
+	 * @param int $forum_id Forum id
+	 */
+	public function admin_forum_attributes_metabox_save( $forum_id ) {
+		$mail = filter_input ( INPUT_POST, 'forum-moderator-mail', FILTER_SANITIZE_EMAIL );
+
+		if ( $mail !== FALSE ) { // FALSE on error and NULL if empty
+			update_post_meta( $forum_id, '_bbp_forum_moderator_mail', $mail );
+		}
+	}
+
+	/**
 	 * Helper to get username whether user is logged in or not
 	 *
 	 * @param  [int]     $user_id [WP user id]
@@ -1241,12 +1320,427 @@ class bbp_ReportContent {
 		// Check if user is logged in
 		if ( 0 != $user_id ) {
 			$user = get_userdata( $user_id );
-			$username = $user->user_login;
+			$username = $user->display_name;
 		} else {
 			$username = __('Guest', 'bbpress-report-content');
 		}
 
 		return $username;
 	}
+
+	/**
+	 * Walk up in the Forum structure tree until there is a moderator address
+	 *
+	 * @param Int $forum_id Id of forum
+	 */
+	function get_parent_moderator($forum_id) {
+
+		$moderator = get_post_meta($forum_id, '_bbp_forum_moderator_mail', true);
+		
+		if ( $moderator ) {
+			return $moderator;
+		} else {
+			if ( wp_get_post_parent_id( $forum_id ) ) {
+				return $this->get_parent_moderator(wp_get_post_parent_id( $forum_id ));
+			} else {
+				return get_option('bbpress_recipient_emails');
+			}
+		}
+	}
+
+	/**
+	 * Get the email adress of the moderator
+	 *
+	 * @paran $post_id int ID of topic or reply
+	 */
+	public function get_moderator_mail_address($topic_id) {
+
+		// check if we use per forum based moderator mails
+
+		if ( ! get_option('bbpress_report_content_per_forum_moderator_mails') ) {
+
+			// use global address
+			return get_option('bbpress_recipient_emails');
+
+		} else {
+
+			// check if there is a moderator
+			return $this->get_parent_moderator(bbp_get_topic_forum_id($topic_id));
+
+		}
+
+	}
+
+	/**
+	 * Sends an email to the Blog admin informing him/her a topic was reported
+	 *
+	 * @since 1.0.6
+	 * 
+	 * @param integer $topic_id The topic ID
+	 *
+	 * @uses bbp_get_topic_id() Get the topic ID
+	 * @uses bbp_get_topic() Get the topic information
+	 * @uses get_reported_status_id() Get the status of the topic Reported/Unreported
+	 * @uses bbp_get_topic_content() Get the content of the topic
+	 * @uses bbp_get_topic_author_display_name() Get the name of the topic author
+	 * @uses get_username() Get the username of the user loggedin or not
+	 * @return string The email content when a user reports a topic in bbPress
+	 */
+	public function topic_report_notify_admin( $topic_id = 0 ) {
+
+		// Getting the topic information
+		$topic_id = bbp_get_topic_id( $topic_id );
+		$topic = bbp_get_topic( $topic_id );
+
+		// Bail if there is no topic
+		if ( empty( $topic ) )
+			return;
+
+		// Bail if topic is already reported
+		if ( $this->get_reported_status_id() === $topic->post_status )
+			return;
+
+		/** Mail ******************************************************************/
+
+		// Strip tags from text and setup mail data
+		$topic_title   		= strip_tags( bbp_get_topic_title( $topic_id ) );
+        $topic_content      = bbp_get_topic_excerpt( $topic_id, 256 ) ;
+		$topic_url     		= get_permalink( $topic_id );
+		$topic_author_name 	= bbp_get_topic_author_display_name( $topic_id );
+		$blog_name     		= wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+		$subject 			= sprintf( __( 'Topic Reported on [%s]' ), $blog_name );
+
+		// User who reported the topic
+		$user_id  			= get_post_meta( $topic_id, '_bbp_report_user_id', true );
+		$user_who_reported  = $this->get_username( $user_id );
+        $reporter     = get_userdata( $user_id );
+        $user_who_reported_email  = $reporter->user_email;
+
+        // Get the email addresses from the settings page
+        $emails             = $this->get_moderator_mail_address($topic_id);
+        $recipients 		= explode( PHP_EOL, $emails );
+
+		// For plugins to filter messages
+		$message 			= sprintf( __( '%1$s had a topic reported by %2$s, %6$s:
+		
+Content of the topic reported.
+
+%3$s
+
+%4$s
+
+Topic Link: %5$s ', 'bbpress-report-content' ),
+
+			$topic_author_name,
+			$user_who_reported,
+			$topic_title,
+			$topic_content,
+			$topic_url,
+            $user_who_reported_email
+		);
+
+		/**
+		 * Filters the recipients email in case developers want to send to custom e-mail
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $to User email the notification is being sent to.
+		 */
+        $recipients = apply_filters( 'topic_report_notify_admin_to', $recipients );
+
+		/**
+		 * Filters the email notification subject that will be sent to admin
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $subject Email notification subject text.
+		 */
+		$subject = apply_filters( 'topic_report_notify_admin_subject', $subject, $blog_name );
+
+		/**
+		 * Filters the email notification message that will be sent to admin
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $message Email notification message text.
+		 * @param string $topic_author_name Name of the person who made the topic
+		 * @param string $user_who_reported  Name of the user who reported the topic
+		 * @param string $topic_title  Title of the topic reported
+		 * @param string $topic_content Content of the topic reported
+		 * @param string $topic_url URL permalink for the topic
+		 */
+		$message = apply_filters( 'topic_report_notify_admin_message', $message, $topic_author_name, $user_who_reported, $topic_title, $topic_content, $topic_url );
+
+
+		/** Send it ***************************************************************/
+	    foreach( $recipients as $recipient ){
+
+            if( is_email( trim( $recipient ) ) ){
+                wp_mail( $recipient, $subject, $message );
+            }
+        }
+
+
+
+	    /**
+	     * Fires after the email was sent
+	     *
+	     * @since 1.0.6
+	     *
+	     * @param int $topic_id Topic ID of the topic sent to
+	     * @param string Text of the subject of the email notification
+	     * @param string Text of the email notification
+	     */
+	    do_action( 'topic_report_notify_admin_action', $topic_id, $subject, $message );
+	}
+
+
+
+	/**
+	 * Sends an email to the Blog admin informing him/her a reply was reported
+	 *
+	 * @since 1.0.6
+	 * 
+	 * @param integer $reply_id The reply ID
+	 *
+	 * @uses bbp_get_reply_id() Get the reply ID
+	 * @uses bbp_get_reply() Get the reply information
+	 * @uses bbp_get_reply_topic_id() Getting the topic of the reply
+	 * @uses get_reported_status_id() Get the status of the reply Reported
+	 * @uses bbp_get_topic_title() Gets reply topic title
+	 * @uses bbp_get_reply_content() Get the content of the reply
+	 * @uses bbp_get_reply_url() Get the reply url
+	 * @uses bbp_get_reply_author_display_name() Get the name of the topic author
+	 * @uses get_username() Get the username of the user loggedin or not
+	 * @return string Sends an email to the admin when a user reports a reply in bbPress
+	 */
+	public function reply_report_notify_admin( $reply_id = 0 ) {
+
+		// Getting the reply ID
+		$reply_id = bbp_get_reply_id( $reply_id );
+		$reply 	  = bbp_get_reply( $reply_id );
+
+		// Return the topic id a reply belongs to
+		$topic_id = bbp_get_reply_topic_id( $reply_id );
+
+		// Bail if there is no reply
+		if ( empty( $reply ) )
+			return;
+
+		// Bail if reply is already reported
+		if ( $this->get_reported_status_id() === $reply->post_status )
+			return;
+
+		/** Mail ******************************************************************/
+
+		// Strip tags from text and setup mail data
+		
+		// Topic
+		$topic_title   		= strip_tags( bbp_get_topic_title( $topic_id ) );
+		$topic_url     		= get_permalink( $topic_id );
+
+		// Reply
+        $reply_content      = bbp_get_reply_excerpt( $reply_id, 256 ) ;
+		$reply_author_name 	= bbp_get_reply_author_display_name( $reply_id );
+		$reply_url 			= bbp_get_reply_url( $reply_id );
+		
+		$blog_name     		= wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+		$subject 			= sprintf( __( 'Reply Reported on [%s]' ), $blog_name );
+
+		// User who reported the reply
+		$user_id  			= get_post_meta( $reply_id, '_bbp_report_user_id', true );
+
+		$user_who_reported  = $this->get_username( $user_id );
+        $reporter     = get_userdata( $user_id );
+        $user_who_reported_email  = $reporter->user_email;
+
+        // Get the email addresses from the settings page
+        $emails             = $this->get_moderator_mail_address($topic_id);
+        $recipients 		= explode( PHP_EOL, $emails );
+
+		// For plugins to filter messages
+		$message 			= sprintf( __( '%1$s had a reply reported by %2$s, %6$s:
+		
+Content of the reply reported.
+
+Reply Content: %3$s
+
+Topic Link: %4$s
+Reply Link: %5$s
+
+', 'bbpress-report-content' ),
+
+			$reply_author_name,
+			$user_who_reported,
+			$reply_content,
+			$topic_url,
+			$reply_url,
+            $user_who_reported_email
+		);
+
+		/**
+		 * Filters the recipients email in case developers want to send to custom e-mails
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $to User email the notification is being sent to.
+		 */
+		$recipients = apply_filters( 'reply_report_notify_admin_to', $recipients );
+
+		/**
+		 * Filters the email notification subject that will be sent to admin
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $subject Email notification subject text.
+		 */
+		$subject = apply_filters( 'reply_report_notify_admin_subject', $subject, $blog_name );
+
+		/**
+		 * Filters the email notification message that will be sent to the admin
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string $message Email notification message text.
+		 * @param string $reply_author_name Name of the person who made the reply
+		 * @param string $user_who_reported  Name of the user who reported the reply
+		 * @param string $topic_title  Title of the topic thw reply reported belongs to
+		 * @param string $reply_content Content of the reply reported
+		 * @param string $topic_url URL permalink for the topic
+		 * @param string $reply_url URL permalink of the reply
+		 */
+		$message = apply_filters( 'reply_report_notify_admin_message', $message, $reply_author_name, $user_who_reported, $topic_title, $reply_content, $topic_url, $reply_url );
+
+		/** Send it ***************************************************************/
+        foreach( $recipients as $recipient ){
+
+            if( is_email( trim( $recipient ) ) ){
+                wp_mail( $recipient, $subject, $message );
+            }
+
+        }
+
+	    /**
+	     * Fires after the email was sent
+	     *
+	     * @since 1.0.6
+	     *
+	     * @param int $reply_id Reply ID of the reply sent to
+	     * @param string Text of the subject of the email notification
+	     * @param string Text of the email notification
+	     */
+	    do_action( 'reply_report_notify_admin_action', $reply_id, $subject, $message );
+	}
+
+
+
+    /**
+     * Add the settings section and fields and register them
+     */
+    public function admin_settings() {
+
+        // Add section to bbPress options
+        add_settings_section(
+            'bbp_report_content',                               // String for use in the 'id' attribute of tags.
+            'Report Content Settings',                          // Title of the section.
+            array( $this, '_bbprc_settings_description' ),      // Function that fills the section with the desired content. The function should echo its output.
+            'bbpress'                                           // The menu page on which to display this section.
+        );
+
+        // Add the form fields
+        add_settings_field(
+            'bbpress_recipient_emails',                         // String for use in the 'id' attribute of tags.
+            'Global moderators',                                 // Title of the field.
+            array( $this, '_bbpress_recipient_emails' ),        // Function that fills the field with the desired inputs as part of the larger form. Passed a single argument, the $args array. Name and id of the input should match the $id given to this function. The function should echo its output.
+            'bbpress',                                          // The menu page on which to display this field.
+            'bbp_report_content'                                // The section of the settings page in which to show the box
+        );
+
+        // Register the settings as part of the bbPress settings
+        register_setting(
+            'bbpress',                                          // A settings group name. Must exist prior to the register_setting call. This must match the group name in settings_fields()
+            'bbpress_recipient_emails',                         // The name of an option to sanitize and save.
+            array($this, 'bbpress_recipient_emails_sanitize')   // A callback function that sanitizes the option's value.
+            );
+
+		// Add checkbox for moderators per forum
+		add_settings_field(
+			'bbpress_report_content_per_forum_moderator_mails',
+			'Enable defintion of Moderator Mails per forum',
+			array ( $this, '_bbpress_report_content_per_forum_moderator_mails' ),
+			'bbpress',
+			'bbp_report_content'
+		);
+
+        // Register the settings as part of the bbPress settings
+        register_setting(
+            'bbpress',                                          // A settings group name. Must exist prior to the register_setting call. This must match the group name in settings_fields()
+            'bbpress_report_content_per_forum_moderator_mails',                         // The name of an option to sanitize and save.
+            array($this, 'bbpress_report_content_per_forum_moderator_mails_sanitize')   // A callback function that sanitizes the option's value.
+            );
+
+    }
+
+
+
+    /**
+     * Output the settings section description
+     */
+    public function _bbprc_settings_description() {
+
+        echo 'Enter the email addresses of the users that will be notified when a post is reported as inappropriate, enter one email address per line';
+
+    }
+
+
+
+    /**
+     * Output the email address textarea
+     *
+     * @param $args
+     */
+    public function _bbpress_recipient_emails($args){
+        
+        $emails = get_option('bbpress_recipient_emails');
+
+        printf( '<textarea name="bbpress_recipient_emails" id="bbpress_recipient_emails"  cols="30" rows="5"> %1$s </textarea>', trim( $emails ) );
+    }
+
+    /**
+     * Output the checkbox for forum-based moderator mails
+     *
+     * @param $args
+     */
+	public function _bbpress_report_content_per_forum_moderator_mails($args){
+		echo '<input type="checkbox" name="bbpress_report_content_per_forum_moderator_mails" id="bbpress_report_content_per_forum_moderator_mails" ' . ( get_option('bbpress_report_content_per_forum_moderator_mails') ? 'checked="checked"' : '""' ) . '">';
+	}
+
+
+
+    /**
+     * Sanitize the email address textarea
+     *
+     * @param $input
+     * @return string
+     */
+    public function bbpress_recipient_emails_sanitize($input) {
+
+        return strip_tags($input);
+    }
+
+
+
+    /**
+     * Sanitize the checkbox
+     *
+     * @param $input
+     * @return string
+     */
+    public function bbpress_report_content_per_forum_moderator_mails_sanitize($input) {
+		return $input == 'on' ? true : false;
+    }
+    
+    
+
 
 } // end class bbp_ReportContent
