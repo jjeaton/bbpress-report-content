@@ -66,7 +66,12 @@ class bbp_ReportContent {
 		// Reply column headers
 		add_filter( 'bbp_admin_replies_column_headers', array( $this, 'admin_replies_column_headers' )           );
 		add_action( 'bbp_admin_replies_column_data',    array( $this, 'admin_replies_column_data'    ),   10,  2 );
-
+		
+		// Add Forum moderator to metabox
+		if ( get_option('bbpress_report_content_per_forum_moderator_mails') ) {
+			add_action( 'add_meta_boxes',				array( $this, 'add_metabox_moderator_mail'	 )			 );
+			add_action( 'bbp_forum_attributes_metabox_save', array( $this, 'admin_forum_attributes_metabox_save'), 10, 2 );
+		}
 
         /****************************************************
          * Settings
@@ -1260,6 +1265,52 @@ class bbp_ReportContent {
 	}
 
 	/**
+	 * Adds a additional metabox for a moderator address
+	 */
+	public function add_metabox_moderator_mail() {
+		if ( get_post_type() == bbp_get_forum_post_type() ) {
+			add_meta_box(
+				'forum-moderator-mail',
+				esc_html__('Moderator E-Mail Address'),
+				array ( $this, 'render_moderator_mail_meta_box' ),
+				null,
+				'side'
+			);
+		}
+	}
+
+	/**
+	 * Renders a additional metabox for a moderator address
+	 *
+	 * @param WP_Post $post current WP_Post object
+	 */
+	public function render_moderator_mail_meta_box( $post ) {
+
+		// parent already has a moderator?
+		$parent_mail = get_post_meta($post->post_parent, '_bbp_forum_moderator_mail', true);
+		if ( $parent_mail !== false ) {
+			echo '<strong>Parent forum moderator address:</strong><br>' . esc_html($parent_mail) . '</p>';
+		}
+
+		// prefill with default
+		$mail = get_post_meta($post->ID, '_bbp_forum_moderator_mail', true);
+		echo '<strong>Moderator Mail:</strong><input type="text" name="forum-moderator-mail" value="'.esc_html($mail).'">';
+	}
+
+	/**
+	 * Save an optional mail adress per forum
+	 *
+	 * @param int $forum_id Forum id
+	 */
+	public function admin_forum_attributes_metabox_save( $forum_id ) {
+		$mail = filter_input ( INPUT_POST, 'forum-moderator-mail', FILTER_SANITIZE_EMAIL );
+
+		if ( $mail !== FALSE ) { // FALSE on error and NULL if empty
+			update_post_meta( $forum_id, '_bbp_forum_moderator_mail', $mail );
+		}
+	}
+
+	/**
 	 * Helper to get username whether user is logged in or not
 	 *
 	 * @param  [int]     $user_id [WP user id]
@@ -1275,6 +1326,49 @@ class bbp_ReportContent {
 		}
 
 		return $username;
+	}
+
+	/**
+	 * Walk up in the Forum structure tree until there is a moderator address
+	 *
+	 * @param Int $forum_id Id of forum
+	 */
+	function get_parent_moderator($forum_id) {
+
+		$moderator = get_post_meta($forum_id, '_bbp_forum_moderator_mail', true);
+		
+		if ( $moderator ) {
+			return $moderator;
+		} else {
+			if ( wp_get_post_parent_id( $forum_id ) ) {
+				return $this->get_parent_moderator(wp_get_post_parent_id( $forum_id ));
+			} else {
+				return get_option('bbpress_recipient_emails');
+			}
+		}
+	}
+
+	/**
+	 * Get the email adress of the moderator
+	 *
+	 * @paran $post_id int ID of topic or reply
+	 */
+	public function get_moderator_mail_address($topic_id) {
+
+		// check if we use per forum based moderator mails
+
+		if ( ! get_option('bbpress_report_content_per_forum_moderator_mails') ) {
+
+			// use global address
+			return get_option('bbpress_recipient_emails');
+
+		} else {
+
+			// check if there is a moderator
+			return $this->get_parent_moderator(bbp_get_topic_forum_id($topic_id));
+
+		}
+
 	}
 
 	/**
@@ -1323,7 +1417,7 @@ class bbp_ReportContent {
         $user_who_reported_email  = $reporter->user_email;
 
         // Get the email addresses from the settings page
-        $emails             = get_option('bbpress_recipient_emails');
+        $emails             = $this->get_moderator_mail_address($topic_id);
         $recipients 		= explode( PHP_EOL, $emails );
 
 		// For plugins to filter messages
@@ -1461,7 +1555,7 @@ Topic Link: %5$s ', 'bbpress-report-content' ),
         $user_who_reported_email  = $reporter->user_email;
 
         // Get the email addresses from the settings page
-        $emails             = get_option('bbpress_recipient_emails');
+        $emails             = $this->get_moderator_mail_address($topic_id);
         $recipients 		= explode( PHP_EOL, $emails );
 
 		// For plugins to filter messages
@@ -1556,7 +1650,7 @@ Reply Link: %5$s
         // Add the form fields
         add_settings_field(
             'bbpress_recipient_emails',                         // String for use in the 'id' attribute of tags.
-            'Recipient Emails',                                 // Title of the field.
+            'Global moderators',                                 // Title of the field.
             array( $this, '_bbpress_recipient_emails' ),        // Function that fills the field with the desired inputs as part of the larger form. Passed a single argument, the $args array. Name and id of the input should match the $id given to this function. The function should echo its output.
             'bbpress',                                          // The menu page on which to display this field.
             'bbp_report_content'                                // The section of the settings page in which to show the box
@@ -1567,6 +1661,22 @@ Reply Link: %5$s
             'bbpress',                                          // A settings group name. Must exist prior to the register_setting call. This must match the group name in settings_fields()
             'bbpress_recipient_emails',                         // The name of an option to sanitize and save.
             array($this, 'bbpress_recipient_emails_sanitize')   // A callback function that sanitizes the option's value.
+            );
+
+		// Add checkbox for moderators per forum
+		add_settings_field(
+			'bbpress_report_content_per_forum_moderator_mails',
+			'Enable defintion of Moderator Mails per forum',
+			array ( $this, '_bbpress_report_content_per_forum_moderator_mails' ),
+			'bbpress',
+			'bbp_report_content'
+		);
+
+        // Register the settings as part of the bbPress settings
+        register_setting(
+            'bbpress',                                          // A settings group name. Must exist prior to the register_setting call. This must match the group name in settings_fields()
+            'bbpress_report_content_per_forum_moderator_mails',                         // The name of an option to sanitize and save.
+            array($this, 'bbpress_report_content_per_forum_moderator_mails_sanitize')   // A callback function that sanitizes the option's value.
             );
 
     }
@@ -1596,6 +1706,15 @@ Reply Link: %5$s
         printf( '<textarea name="bbpress_recipient_emails" id="bbpress_recipient_emails"  cols="30" rows="5"> %1$s </textarea>', trim( $emails ) );
     }
 
+    /**
+     * Output the checkbox for forum-based moderator mails
+     *
+     * @param $args
+     */
+	public function _bbpress_report_content_per_forum_moderator_mails($args){
+		echo '<input type="checkbox" name="bbpress_report_content_per_forum_moderator_mails" id="bbpress_report_content_per_forum_moderator_mails" ' . ( get_option('bbpress_report_content_per_forum_moderator_mails') ? 'checked="checked"' : '""' ) . '">';
+	}
+
 
 
     /**
@@ -1607,6 +1726,18 @@ Reply Link: %5$s
     public function bbpress_recipient_emails_sanitize($input) {
 
         return strip_tags($input);
+    }
+
+
+
+    /**
+     * Sanitize the checkbox
+     *
+     * @param $input
+     * @return string
+     */
+    public function bbpress_report_content_per_forum_moderator_mails_sanitize($input) {
+		return $input == 'on' ? true : false;
     }
     
     
